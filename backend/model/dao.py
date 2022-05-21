@@ -1,6 +1,6 @@
 import sqlite3
 
-from backend.solution.utils.config import DB_PATH
+from backend.utils.config import DB_PATH
 
 
 class DAO:
