@@ -1,12 +1,13 @@
 from flask import Flask, jsonify
+
 from database import db
+from config import Config
 
 # Function that create the app
-def create_app(test_config=None):
+def create_app():
     # create and configure the app
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite://database.db"
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config.from_object(Config)
 
     # Simple route
     @app.route("/")
@@ -16,9 +17,15 @@ def create_app(test_config=None):
     return app  # do not forget to return the app
 
 
-APP = create_app()
+app = create_app()
+
+
+@app.before_first_request
+def create_tables():
+    db.create_all()
+
 
 if __name__ == "__main__":
-    db.init_app(APP)
-    # APP.run(host='0.0.0.0', port=5000, debug=True)
-    APP.run(debug=True)
+    db.init_app(app)
+    # App.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(debug=True)
