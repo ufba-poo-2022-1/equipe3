@@ -1,7 +1,4 @@
 from flask import Flask, jsonify
-
-from database import db
-from config import Config
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -10,7 +7,8 @@ db = SQLAlchemy()
 def create_app():
     # create and configure the app
     app = Flask(__name__)
-    app.config.from_object(Config)
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
 
@@ -26,11 +24,18 @@ app = create_app()
 
 
 @app.before_first_request
-def create_tables():
+def init_db():
+    from models import (
+        address_model,
+        immobile_model,
+        owner_model,
+        tenant_model,
+        user_model,
+    )
+
     db.create_all()
 
 
 if __name__ == "__main__":
-    db.init_app(app)
     # App.run(host='0.0.0.0', port=5000, debug=True)
     app.run(debug=True)
