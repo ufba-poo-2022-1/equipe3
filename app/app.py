@@ -2,12 +2,17 @@ from flask import Flask, jsonify
 
 from database import db
 from config import Config
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 # Function that create the app
 def create_app():
     # create and configure the app
     app = Flask(__name__)
     app.config.from_object(Config)
+
+    db.init_app(app)
 
     # Simple route
     @app.route("/")
