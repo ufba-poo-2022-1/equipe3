@@ -14,34 +14,34 @@ class User(db.Model):
     # TODO: Add address filed
 
     def __init__(self, id, name, email, password, celphone, address):
-        self.id = id
-        self.name = name
-        self.email = email
-        self.password = password
-        self.celphone = celphone
-        self.address = address
+        self.__id = id
+        self.__name = name
+        self.__email = email
+        self.__password = password
+        self.__celphone = celphone
+        self.__address = address
 
     def get_id(self):
         return self.id
 
     def get_data(self):
         return [
-            self.id,
-            self.name,
-            self.email,
-            self.password,
-            self.celphone,
-            self.addresss,
+            self.__id,
+            self.__name,
+            self.__email,
+            self.__password,
+            self.__celphone,
+            self.__address,
         ]
 
     def set_cellphone(self, number):
-        self.celphone = number
+        self.__celphone = number
         return 0
 
     def set_email(self, email):
-        self.email = email
+        self.__email = email
         return 0
 
     def set_password(self, password):
-        self.password = password
+        self.__password = password
         return 0
