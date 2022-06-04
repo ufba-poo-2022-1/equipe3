@@ -1,4 +1,4 @@
-from app import db
+from extensions import db
 
 
 class User(db.Model):
@@ -14,12 +14,12 @@ class User(db.Model):
     # TODO: Add address filed
 
     def __init__(self, id, name, email, password, celphone, address):
-        self.__id = id
-        self.__name = name
-        self.__email = email
-        self.__password = password
-        self.__celphone = celphone
-        self.__address = address
+        self.id = id
+        self.name = name
+        self.email = email
+        self.password = password
+        self.celphone = celphone
+        self.address = address
 
     def get_id(self):
         return self.id

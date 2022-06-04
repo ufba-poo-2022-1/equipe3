@@ -1,14 +1,13 @@
 from flask import Flask, jsonify,request
-from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api, Resource, reqparse, fields, marshal
 from controller.user_controller import add_user
 from controller.building_controller import add_building
 from datetime import datetime
 from threading import Thread
+from extensions import db
 
 
-
-db = SQLAlchemy()
+db = db
 
 # Function that create the app
 def create_app():
