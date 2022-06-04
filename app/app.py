@@ -57,17 +57,10 @@ class AddUserAPI(Resource):
         args = self.reqparse.parse_args()
 
         json_data = request.get_json(force=True)
-        un = json_data['username']
-        pw = json_data['password']
-        #args = parser.parse_args()
-        #un = str(args['username'])
-        #pw = str(args['password'])
-        j = jsonify(u=un, p=pw)
-
 
         start_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        thread = Thread(target=self.post_task(j))
+        thread = Thread(target=self.post_task(json_data))
         thread.start()
 
         end_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
