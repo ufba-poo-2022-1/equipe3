@@ -1,5 +1,12 @@
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_restful import Api, Resource, reqparse, fields, marshal
+from controller.user_controller import add_user
+from controller.building_controller import add_building
+from datetime import datetime
+from threading import Thread
+
+
 
 db = SQLAlchemy()
 
@@ -21,7 +28,7 @@ def create_app():
 
 
 app = create_app()
-
+api = Api(app)
 
 @app.before_first_request
 def init_db():
@@ -34,6 +41,75 @@ def init_db():
     )
 
     db.create_all()
+
+
+# APIs
+class AddUserAPI(Resource):
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        super(AddUserAPI, self).__init__()
+
+    def post_task(self):
+        add_user()
+
+    def post(self):
+        args = self.reqparse.parse_args()
+        start_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        thread = Thread(target=self.post_task)
+        thread.start()
+
+        end_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        status = 'OK'
+
+        result = {
+            'start_date': start_date,
+            'end_date': end_date,
+            'status': status
+        }
+        api_fields = {
+            'start_date': fields.String,
+            'end_date': fields.String,
+            'status': fields.String
+        }
+        return {'add_user': marshal(result, api_fields)}, 201
+
+class AddBuildingAPI(Resource):
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        super(AddBuildingAPI, self).__init__()
+
+    def post_task(self):
+        add_building()
+        pass
+
+    def post(self):
+        args = self.reqparse.parse_args()
+        start_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        thread = Thread(target=self.post_task)
+        thread.start()
+
+        end_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        status = 'OK'
+
+        result = {
+            'start_date': start_date,
+            'end_date': end_date,
+            'status': status
+        }
+        api_fields = {
+            'start_date': fields.String,
+            'end_date': fields.String,
+            'status': fields.String
+        }
+        return {'add_building': marshal(result, api_fields)}, 201
+
+# Routes
+api.add_resource(AddUserAPI, '/mobx/api/add_user', endpoint='add_user')
+api.add_resource(AddBuildingAPI, '/mobx/api/add_building', endpoint='add_building')
+
+
 
 
 if __name__ == "__main__":
