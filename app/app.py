@@ -79,15 +79,15 @@ class AddBuildingAPI(Resource):
         self.reqparse = reqparse.RequestParser()
         super(AddBuildingAPI, self).__init__()
 
-    def post_task(self):
-        add_building()
+    def get_task(self,id):
+        add_building(id)
         pass
 
-    def post(self):
+    def get(self,id):
         args = self.reqparse.parse_args()
         start_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        thread = Thread(target=self.post_task)
+        thread = Thread(target=self.get_task(id))
         thread.start()
 
         end_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -107,7 +107,7 @@ class AddBuildingAPI(Resource):
 
 # Routes
 api.add_resource(AddUserAPI, '/mobx/api/add_user', endpoint='add_user')
-api.add_resource(AddBuildingAPI, '/mobx/api/add_building', endpoint='add_building')
+api.add_resource(AddBuildingAPI, '/mobx/api/add_building','/mobx/api/add_building/<id>', endpoint='add_building')
 
 
 
