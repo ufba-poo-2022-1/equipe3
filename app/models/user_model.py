@@ -13,12 +13,12 @@ class User(db.Model):
 
     # TODO: Add address filed
 
-    def __init__(self, id, name, email, password, celphone, address):
+    def __init__(self, id, name, email, password, phone, address):
         self.id = id
         self.name = name
         self.email = email
         self.password = password
-        self.celphone = celphone
+        self.phone = phone
         self.address = address
 
     def get_id(self):

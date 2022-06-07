@@ -1,6 +1,7 @@
-from app import db
+from extensions import db
 
 
+""" Controller responsible for adding user endpoints """
 class Immobile(db.Model):
     __tablename__ = "immobiles"
 
@@ -14,13 +15,13 @@ class Immobile(db.Model):
     # TODO: include adress field
 
     def __init__(self, id, type, description, address, value, area, is_available):
-        self.__id = id
-        self.__type = type
-        self.__description = description
-        self.__address = address
-        self.__value = value
-        self.__area = area
-        self.__is_available = is_available
+        self.id = id
+        self.type = type
+        self.description = description
+        self.address = address
+        self.value = value
+        self.area = area
+        self.is_available = is_available
 
     def get_dados(self):
         return [

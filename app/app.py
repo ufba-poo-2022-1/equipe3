@@ -77,20 +77,23 @@ class AddUserAPI(Resource):
         }
         return {'add_user': marshal(result, api_fields)}, 201
 
-class AddBuildingAPI(Resource):
+class AddImmobileAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        super(AddBuildingAPI, self).__init__()
+        super(AddImmobileAPI, self).__init__()
 
-    def get_task(self,id):
-        add_building(id)
+    def post_task(self,j):
+        add_building(j)
         pass
 
-    def get(self,id):
+    def post(self):
         args = self.reqparse.parse_args()
+
+        json_data = request.get_json(force=True)
+
         start_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        thread = Thread(target=self.get_task(id))
+        thread = Thread(target=self.post_task(json_data))
         thread.start()
 
         end_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -106,11 +109,12 @@ class AddBuildingAPI(Resource):
             'end_date': fields.String,
             'status': fields.String
         }
-        return {'add_building': marshal(result, api_fields)}, 201
+        return {'add_immobile': marshal(result, api_fields)}, 201
 
 # Routes
 api.add_resource(AddUserAPI, '/mobx/api/add_user', endpoint='add_user')
-api.add_resource(AddBuildingAPI, '/mobx/api/add_building','/mobx/api/add_building/<id>', endpoint='add_building')
+api.add_resource(AddImmobileAPI, '/mobx/api/add_immobile', endpoint='add_immobile')
+#api.add_resource(AddImmobileAPI, '/mobx/api/add_building','/mobx/api/add_building/<id>', endpoint='add_building')
 
 
 
