@@ -1,7 +1,7 @@
 from flask import Flask, jsonify,request
 from flask_restful import Api, Resource, reqparse, fields, marshal
-from controller.user_controller import add_user
-from controller.building_controller import add_building
+from controller.user_controller import add_user,show_users
+from controller.building_controller import add_building,show_immobiles
 from datetime import datetime
 from threading import Thread
 from extensions import db
@@ -111,10 +111,75 @@ class AddImmobileAPI(Resource):
         }
         return {'add_immobile': marshal(result, api_fields)}, 201
 
+    
+class ListUsersAPI(Resource):
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        super(ListUsersAPI, self).__init__()
+
+    def get_task(self):
+        show_users()
+        pass
+
+    def get(self):
+        args = self.reqparse.parse_args()
+
+        start_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        thread = Thread(target=self.get_task())
+        thread.start()
+
+        end_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        status = 'OK'
+
+        result = {
+            'start_date': start_date,
+            'end_date': end_date,
+            'status': status
+        }
+        api_fields = {
+            'start_date': fields.String,
+            'end_date': fields.String,
+            'status': fields.String
+        }
+        return {'list_users': marshal(result, api_fields)}, 201
+
+class ListImmobilesAPI(Resource):
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        super(ListImmobilesAPI, self).__init__()
+
+    def get_task(self):
+        show_immobiles()
+        pass
+
+    def get(self):
+        args = self.reqparse.parse_args()
+
+        start_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        thread = Thread(target=self.get_task())
+        thread.start()
+
+        end_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        status = 'OK'
+
+        result = {
+            'start_date': start_date,
+            'end_date': end_date,
+            'status': status
+        }
+        api_fields = {
+            'start_date': fields.String,
+            'end_date': fields.String,
+            'status': fields.String
+        }
+        return {'list_immobiles': marshal(result, api_fields)}, 201
 # Routes
 api.add_resource(AddUserAPI, '/mobx/api/add_user', endpoint='add_user')
 api.add_resource(AddImmobileAPI, '/mobx/api/add_immobile', endpoint='add_immobile')
-#api.add_resource(AddImmobileAPI, '/mobx/api/add_building','/mobx/api/add_building/<id>', endpoint='add_building')
+api.add_resource(ListUsersAPI, '/mobx/api/list_users', endpoint='list_users')
+api.add_resource(ListImmobilesAPI, '/mobx/api/list_immobiles', endpoint='list_immobiles')
 
 
 

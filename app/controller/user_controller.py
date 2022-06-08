@@ -3,7 +3,7 @@ from datetime import datetime
 from models.user_model import User, db
 
 
-""" Controller responsible for adding user endpoints """
+""" Controller responsible for adding and deleting user endpoints """
 def add_user(json_data):
     print('\n\n\n\n\n###########')
     print('{} - Script starting'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
@@ -27,3 +27,24 @@ def add_user(json_data):
     print('\n\n\n\n\n###########')
     print('{} - Script ending'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
     print('###########\n\n\n\n\n')
+
+def show_users():
+    print('\n\n\n\n\n###########')
+    print('{} - Script starting'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+    print('###########\n\n\n\n\n')
+    print('Showing active users\n\n\n\n\n')
+
+    # Fetch all customer records
+    records = db.session.query(User.name).all()
+
+    # Loop over records
+    for record in records:
+        print(record)
+
+
+    #db.session.commit()
+
+    print('\n\n\n\n\n###########')
+    print('{} - Script ending'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+    print('###########\n\n\n\n\n')
+
