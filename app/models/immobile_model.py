@@ -13,6 +13,7 @@ class Immobile(db.Model):
     description = db.Column(db.String(128))
     value = db.Column(db.Float)
     area = db.Column(db.Float)
+    _is_available = db.Column(db.Boolean, default=True)
     type = db.Column(db.String(128))
 
     address = db.relationship("Address", backref="immobiles")
@@ -22,18 +23,14 @@ class Immobile(db.Model):
     def __init__(self, description, value, area, is_available):
         self.id = str(uuid4())
         self.description = description
-        self.address = address
         self.value = value
         self.area = area
-        self.is_available = is_available
+        self._is_available = is_available
 
-    def get_dados(self):
-        return [
-            self.__id,
-            self.__type,
-            self.__description,
-            self.__address,
-            self.__value,
-            self.__area,
-            self.__is_available,
-        ]
+    @property
+    def is_available(self):
+        return self._is_available
+
+    @is_available.setter
+    def is_available(self, is_available):
+        self._is_available = is_available
