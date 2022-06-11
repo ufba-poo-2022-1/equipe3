@@ -13,9 +13,11 @@ class Immobile(db.Model):
     description = db.Column(db.String(128))
     value = db.Column(db.Float)
     area = db.Column(db.Float)
-    is_available = db.Column(db.Boolean, default=True)
+    type = db.Column(db.String(128))
 
     address = db.relationship("Address", backref="immobiles")
+
+    __mapper_args__ = {"polymorphic_identity": "immobiles", "polymorphic_on": type}
 
     def __init__(self, description, value, area, is_available):
         self.id = str(uuid4())
