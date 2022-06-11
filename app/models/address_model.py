@@ -11,3 +11,5 @@ class Address(db.Model):
     city = db.Column(db.String(128))
     cep = db.Column(db.String(128))
     complement = db.Column(db.String(128))
+
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))

@@ -11,16 +11,16 @@ class User(db.Model):
     phone = db.Column(db.String(120))
     type = db.Column(db.String(128))
 
+    address = db.relationship("Address", backref="users")
 
     __mapper_args__ = {"polymorphic_identity": "user", "polymorphic_on": type}
 
-    def __init__(self, id, name, email, password, phone, address):
+    def __init__(self, id, name, email, password, phone):
         self.id = id
         self.name = name
         self.email = email
         self.password = password
         self.phone = phone
-        self.address = address
 
     def get_id(self):
         return self.id
