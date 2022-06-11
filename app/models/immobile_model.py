@@ -1,12 +1,15 @@
+from uuid import uuid4
+
 from extensions import db
 
 
 """ Controller responsible for adding user endpoints """
+
+
 class Immobile(db.Model):
     __tablename__ = "immobiles"
 
-    id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.String(128))
+    id = db.Column(db.String, primary_key=True)
     description = db.Column(db.String(128))
     value = db.Column(db.Float)
     area = db.Column(db.Float)
@@ -14,9 +17,8 @@ class Immobile(db.Model):
 
     # TODO: include adress field
 
-    def __init__(self, id, type, description, address, value, area, is_available):
-        self.id = id
-        self.type = type
+    def __init__(self, description, value, area, is_available):
+        self.id = str(uuid4())
         self.description = description
         self.address = address
         self.value = value

@@ -1,10 +1,12 @@
+from uuid import uuid4
+
 from extensions import db
 
 
 class Address(db.Model):
-    __tablename__ = "adresses"
+    __tablename__ = "addresses"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String, primary_key=True)
     street = db.Column(db.String(128))
     number = db.Column(db.Integer)
     district = db.Column(db.String(128))
@@ -12,6 +14,7 @@ class Address(db.Model):
     cep = db.Column(db.String(128))
     complement = db.Column(db.String(128))
 
+    user_id = db.Column(db.String, db.ForeignKey("users.id"))
 
     def __init__(self, street, number, district, city, cep, user_id, complement=None):
         self.id = str(uuid4())
