@@ -15,6 +15,7 @@ class Address(db.Model):
     complement = db.Column(db.String(128))
 
     user_id = db.Column(db.String, db.ForeignKey("users.id"))
+    immobile_id = db.Column(db.String, db.ForeignKey("immobiles.id"))
 
     def __init__(self, street, number, district, city, cep, user_id, complement=None):
         self.id = str(uuid4())

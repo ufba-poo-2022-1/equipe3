@@ -15,7 +15,7 @@ class Immobile(db.Model):
     area = db.Column(db.Float)
     is_available = db.Column(db.Boolean, default=True)
 
-    # TODO: include adress field
+    address = db.relationship("Address", backref="immobiles")
 
     def __init__(self, description, value, area, is_available):
         self.id = str(uuid4())
