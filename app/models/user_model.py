@@ -11,7 +11,8 @@ class User(db.Model):
     phone = db.Column(db.String(120))
     type = db.Column(db.String(128))
 
-    # TODO: Add address filed
+
+    __mapper_args__ = {"polymorphic_identity": "user", "polymorphic_on": type}
 
     def __init__(self, id, name, email, password, phone, address):
         self.id = id
