@@ -27,3 +27,24 @@ def add_building(json_data):
     print('\n\n\n\n\n###########')
     print('{} - Script ending'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
     print('###########\n\n\n\n\n')
+
+
+def show_immobiles():
+    print('\n\n\n\n\n###########')
+    print('{} - Script starting'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+    print('###########\n\n\n\n\n')
+    print('Showing active Immobiles\n\n\n\n\n')
+
+    # Fetch all customer records
+    records = db.session.query(Immobile.id).all()
+
+    # Loop over records
+    for record in records:
+        print(record)
+
+
+    #db.session.commit()
+
+    print('\n\n\n\n\n###########')
+    print('{} - Script ending'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+    print('###########\n\n\n\n\n')
