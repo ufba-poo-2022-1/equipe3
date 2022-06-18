@@ -50,3 +50,24 @@ def show_tenants():
     print("\n\n\n\n\n###########")
     print("{} - Script ending".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
     print("###########\n\n\n\n\n")
+
+
+def get_tenants(json_data):
+    print("\n\n\n\n\n###########")
+    print("{} - Script starting".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+    print("###########\n\n\n\n\n")
+    print("Showing active users\n\n\n\n\n")
+
+    id = json_data["id"]
+
+    # Fetch all customer records
+    print(db.session.query(Tenant).get(id))
+
+    # Loop over records
+
+
+    # db.session.commit()
+
+    print("\n\n\n\n\n###########")
+    print("{} - Script ending".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+    print("###########\n\n\n\n\n")

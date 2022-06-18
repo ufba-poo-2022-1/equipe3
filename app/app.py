@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_restful import Api, Resource, reqparse, fields, marshal
-from controller.tenant_controller import add_tenant, show_tenants
+from controller.tenant_controller import add_tenant, show_tenants, get_tenants
 from controller.building_controller import add_building, show_immobiles
 from datetime import datetime
 from threading import Thread
@@ -164,11 +164,42 @@ class ListImmobilesAPI(Resource):
         return {"list_immobiles": marshal(result, api_fields)}, 201
 
 
+class GetTenantById(Resource):
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        super(GetTenantById, self).__init__()
+
+    def post_task(self, j):
+        get_tenants(j)
+
+    def post(self):
+        args = self.reqparse.parse_args()
+
+        json_data = request.get_json(force=True)
+
+        start_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        thread = Thread(target=self.post_task(json_data))
+        thread.start()
+
+        end_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        status = "OK"
+
+        result = {"start_date": start_date, "end_date": end_date, "status": status}
+        api_fields = {
+            "start_date": fields.String,
+            "end_date": fields.String,
+            "status": fields.String,
+        }
+        return {"add_user": marshal(result, api_fields)}, 201
+
+
 # Routes
 api.add_resource(AddTenantAPI, "/mobx/api/add_tenant", endpoint="add_tenant")
 api.add_resource(AddImmobileAPI, "/mobx/api/add_immobile", endpoint="add_immobile")
 api.add_resource(ListTenantsAPI, "/mobx/api/list_tenants", endpoint="list_tenants")
 api.add_resource(ListImmobilesAPI, "/mobx/api/list_immobiles", endpoint="list_immobiles")
+api.add_resource(GetTenantById, "/mobx/api/get_tenant_by_id", endpoint="get_tenant_by_id")
 
 
 if __name__ == "__main__":
