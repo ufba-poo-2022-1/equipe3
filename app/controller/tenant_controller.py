@@ -6,7 +6,7 @@ from models.tenant_model import Tenant
 """ Controller responsible for adding and deleting user endpoints """
 
 
-def add_user(json_data):
+def add_tenant(json_data):
     print("\n\n\n\n\n###########")
     print("{} - Script starting".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
     print("###########\n\n\n\n\n")
@@ -15,8 +15,10 @@ def add_user(json_data):
     email = json_data["email"]
     password = json_data["password"]
     phone = json_data["phone"]
+    #Where does it come from?
+    rent_contract = json_data["rent_contract"]
 
-    tenant = Tenant(name, email, password, phone)
+    tenant = Tenant(name, email, password, phone, rent_contract)
 
     db.session.add(tenant)
     db.session.commit()

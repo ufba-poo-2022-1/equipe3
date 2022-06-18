@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_restful import Api, Resource, reqparse, fields, marshal
-from controller.user_controller import add_user, show_users
+from controller.tenant_controller import add_tenant, show_tenants
 from controller.building_controller import add_building, show_immobiles
 from datetime import datetime
 from threading import Thread
@@ -47,13 +47,13 @@ def init_db():
 
 
 # APIs
-class AddUserAPI(Resource):
+class AddTenantAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        super(AddUserAPI, self).__init__()
+        super(AddTenantAPI, self).__init__()
 
     def post_task(self, j):
-        add_user(j)
+        add_tenant(j)
 
     def post(self):
         args = self.reqparse.parse_args()
@@ -107,13 +107,13 @@ class AddImmobileAPI(Resource):
         return {"add_immobile": marshal(result, api_fields)}, 201
 
 
-class ListUsersAPI(Resource):
+class ListTenantsAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        super(ListUsersAPI, self).__init__()
+        super(ListTenantsAPI, self).__init__()
 
     def get_task(self):
-        show_users()
+        show_tenants()
 
     def get(self):
         args = self.reqparse.parse_args()
@@ -165,9 +165,9 @@ class ListImmobilesAPI(Resource):
 
 
 # Routes
-api.add_resource(AddUserAPI, "/mobx/api/add_user", endpoint="add_user")
+api.add_resource(AddTenantAPI, "/mobx/api/add_tenant", endpoint="add_tenant")
 api.add_resource(AddImmobileAPI, "/mobx/api/add_immobile", endpoint="add_immobile")
-api.add_resource(ListUsersAPI, "/mobx/api/list_users", endpoint="list_users")
+api.add_resource(ListTenantsAPI, "/mobx/api/list_tenants", endpoint="list_tenants")
 api.add_resource(ListImmobilesAPI, "/mobx/api/list_immobiles", endpoint="list_immobiles")
 
 
