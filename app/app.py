@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from flask_restful import Api, Resource, reqparse, fields, marshal
 from controller.tenant_controller import add_tenant, show_tenants, get_tenants
 from controller.owner_controller import add_owner, show_owners, get_owners
-from controller.building_controller import add_building, show_immobiles
+from controller.immobile_controller import add_house,add_apartment, show_immobiles
 from datetime import datetime
 from threading import Thread
 from extensions import db
@@ -114,7 +114,10 @@ class AddImmobileAPI(Resource):
         super(AddImmobileAPI, self).__init__()
 
     def post_task(self, j):
-        add_building(j)
+        if j["flag"] == 1:
+            add_house(j)
+        else:
+            add_apartment(j)
 
     def post(self):
         args = self.reqparse.parse_args()
