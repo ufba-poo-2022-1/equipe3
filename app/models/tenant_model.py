@@ -23,3 +23,12 @@ class Tenant(User):
             phone,
         )
         self.rent_contract_id = rent_contract_id
+
+    def transform_to_json(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "phone": self.phone,
+            "rent_contract_id": self.rent_contract_id if self.rent_contract_id else None,
+        }
