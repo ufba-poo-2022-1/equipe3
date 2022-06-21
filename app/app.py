@@ -1,11 +1,14 @@
 from flask import Flask, jsonify, request
 from flask_restful import Api, Resource, reqparse, fields, marshal
-from controller.tenant_controller import add_tenant, show_tenants, get_tenants
-from controller.owner_controller import add_owner, show_owners, get_owners
-from controller.immobile_controller import add_house,add_apartment, show_immobiles
 from datetime import datetime
 from threading import Thread
+
 from extensions import db
+from controller.tenant_controller import add_tenant, show_tenants, get_tenants
+from controller.owner_controller import add_owner, show_owners, get_owners
+from controller.immobile_controller import add_house, add_apartment, show_immobiles
+from shared.responses import make_exception_response, make_success_response
+from shared.app_errors import AppError
 
 
 db = db
@@ -47,35 +50,39 @@ def init_db():
     db.create_all()
 
 
+@app.errorhandler(AppError)
+def handle_exception(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+
+    return response
+
+
+@app.errorhandler(Exception)
+def handle_exception(error):
+    return make_exception_response(description=error.__str__())
+
+
 # APIs
 class AddTenantAPI(Resource):
-    def __init__(self):
-        self.reqparse = reqparse.RequestParser()
-        super(AddTenantAPI, self).__init__()
+    # def __init__(self):
+    #     self.reqparse = reqparse.RequestParser()
+    #     super(AddTenantAPI, self).__init__()
 
-    def post_task(self, j):
-        add_tenant(j)
+    # def post_task(self, j):
+    #     add_tenant(j)
 
     def post(self):
-        args = self.reqparse.parse_args()
-
         json_data = request.get_json(force=True)
 
-        start_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        tenant = add_tenant(json_data)
 
-        thread = Thread(target=self.post_task(json_data))
-        thread.start()
+        return make_success_response(
+            message="Inquilino criado com sucesso.",
+            data=tenant,
+            status_code=201,
+        )
 
-        end_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        status = "OK"
-
-        result = {"start_date": start_date, "end_date": end_date, "status": status}
-        api_fields = {
-            "start_date": fields.String,
-            "end_date": fields.String,
-            "status": fields.String,
-        }
-        return {"add_tenant": marshal(result, api_fields)}, 201
 
 class AddOwnerAPI(Resource):
     def __init__(self):
@@ -105,7 +112,6 @@ class AddOwnerAPI(Resource):
             "status": fields.String,
         }
         return {"add_owner": marshal(result, api_fields)}, 201
-
 
 
 class AddImmobileAPI(Resource):
@@ -255,6 +261,7 @@ class GetTenantById(Resource):
         }
         return {"get_tenant_by_id": marshal(result, api_fields)}, 201
 
+
 class GetOwnersById(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
@@ -294,7 +301,6 @@ api.add_resource(ListOwnersAPI, "/mobx/api/list_owners", endpoint="list_owners")
 api.add_resource(ListImmobilesAPI, "/mobx/api/list_immobiles", endpoint="list_immobiles")
 api.add_resource(GetTenantById, "/mobx/api/get_tenant_by_id", endpoint="get_tenant_by_id")
 api.add_resource(GetOwnersById, "/mobx/api/get_owners_by_id", endpoint="get_owners_by_id")
-
 
 
 if __name__ == "__main__":
