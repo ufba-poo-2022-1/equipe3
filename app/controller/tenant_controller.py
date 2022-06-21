@@ -1,35 +1,42 @@
 from datetime import datetime
+
 from extensions import db
 from models.tenant_model import Tenant
+from shared.app_errors import AppError
+from shared.responses import make_exception_response
 
 
 """ Controller responsible for adding and deleting user endpoints """
 
 
 def add_tenant(json_data):
-    print("\n\n\n\n\n###########")
-    print("{} - Script starting".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-    print("###########\n\n\n\n\n")
-    print("Adding the user into database\n\n\n\n\n")
     name = json_data["name"]
     email = json_data["email"]
     password = json_data["password"]
     phone = json_data["phone"]
-    #Where does it come from?
-    rent_contract = json_data["rent_contract"]
+    rent_contract_id = None
 
-    tenant = Tenant(name, email, password, phone, rent_contract)
+    # Where does it come from?
+    if "rent_contract_id" in json_data:
+        rent_contract_id = json_data["rent_contract_id"]
 
-    db.session.add(tenant)
-    db.session.commit()
+    tenant = Tenant.query.filter_by(email=email).first()
 
-    # j = jsonify(i=id, n=name,e=email,p=password,ph=phone,t=type)
-    # res = j
-    # res = list(map(lambda x: json.loads(x), res))
-    # print(res)
-    print("\n\n\n\n\n###########")
-    print("{} - Script ending".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-    print("###########\n\n\n\n\n")
+    if tenant is not None:
+        raise AppError("Já existe um inquilino com estes dados.")
+
+    tenant = Tenant(name, email, password, phone, rent_contract_id)
+
+    try:
+        db.session.add(tenant)
+        db.session.commit()
+
+    except Exception as error:
+        return make_exception_response(
+            description=error.__str__(), message="Não foi possível cadastrar o inqulino."
+        )
+
+    return tenant.transform_to_json()
 
 
 def show_tenants():
@@ -64,7 +71,6 @@ def get_tenants(json_data):
     print(db.session.query(Tenant).get(id))
 
     # Loop over records
-
 
     # db.session.commit()
 
