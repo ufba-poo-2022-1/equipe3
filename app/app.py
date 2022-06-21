@@ -7,6 +7,7 @@ from extensions import db
 from controller.tenant_controller import add_tenant, show_tenants, get_tenants
 from controller.owner_controller import add_owner, show_owners, get_owners
 from controller.immobile_controller import add_house, add_apartment, show_immobiles
+from controller.rent_controller import add_rent
 from shared.responses import make_exception_response, make_success_response
 from shared.app_errors import AppError
 
@@ -80,6 +81,25 @@ class AddTenantAPI(Resource):
         return make_success_response(
             message="Inquilino criado com sucesso.",
             data=tenant,
+            status_code=201,
+        )
+
+class AddRentAPI(Resource):
+    # def __init__(self):
+    #     self.reqparse = reqparse.RequestParser()
+    #     super(AddTenantAPI, self).__init__()
+
+    # def post_task(self, j):
+    #     add_tenant(j)
+
+    def post(self):
+        json_data = request.get_json(force=True)
+
+        rent = add_rent(json_data)
+
+        return make_success_response(
+            message="Aluguel criado com sucesso.",
+            data=rent,
             status_code=201,
         )
 
@@ -294,6 +314,7 @@ class GetOwnersById(Resource):
 
 # Routes
 api.add_resource(AddTenantAPI, "/mobx/api/add_tenant", endpoint="add_tenant")
+api.add_resource(AddRentAPI, "/mobx/api/add_rent", endpoint="add_rent")
 api.add_resource(AddOwnerAPI, "/mobx/api/add_owner", endpoint="add_owner")
 api.add_resource(AddImmobileAPI, "/mobx/api/add_immobile", endpoint="add_immobile")
 api.add_resource(ListTenantsAPI, "/mobx/api/list_tenants", endpoint="list_tenants")
