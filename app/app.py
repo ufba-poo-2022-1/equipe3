@@ -7,7 +7,7 @@ from extensions import db
 from controller.tenant_controller import add_tenant, show_tenants, get_tenants
 from controller.owner_controller import add_owner, show_owners, get_owners
 from controller.immobile_controller import add_house, add_apartment, show_immobiles
-from controller.rent_controller import add_rent
+from controller.rent_controller import add_rent, cancel_rent, show_rent
 from shared.responses import make_exception_response, make_success_response
 from shared.app_errors import AppError
 
@@ -311,6 +311,64 @@ class GetOwnersById(Resource):
         }
         return {"get_owners_by_id": marshal(result, api_fields)}, 201
 
+class CancelRentById(Resource):
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        super(GetOwnersById, self).__init__()
+
+    def post_task(self, j):
+        cancel_rent(j)
+
+    def post(self):
+        args = self.reqparse.parse_args()
+
+        json_data = request.get_json(force=True)
+
+        start_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        thread = Thread(target=self.post_task(json_data))
+        thread.start()
+
+        end_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        status = "OK"
+
+        result = {"start_date": start_date, "end_date": end_date, "status": status}
+        api_fields = {
+            "start_date": fields.String,
+            "end_date": fields.String,
+            "status": fields.String,
+        }
+        return {"cancel_rent_by_id": marshal(result, api_fields)}, 201
+
+class ShowRentByUserId(Resource):
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        super(GetOwnersById, self).__init__()
+
+    def post_task(self, j):
+        show_rent(j)
+
+    def post(self):
+        args = self.reqparse.parse_args()
+
+        json_data = request.get_json(force=True)
+
+        start_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        thread = Thread(target=self.post_task(json_data))
+        thread.start()
+
+        end_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        status = "OK"
+
+        result = {"start_date": start_date, "end_date": end_date, "status": status}
+        api_fields = {
+            "start_date": fields.String,
+            "end_date": fields.String,
+            "status": fields.String,
+        }
+        return {"show_rent_by_user_id": marshal(result, api_fields)}, 201
+
 
 # Routes
 api.add_resource(AddTenantAPI, "/mobx/api/add_tenant", endpoint="add_tenant")
@@ -322,6 +380,8 @@ api.add_resource(ListOwnersAPI, "/mobx/api/list_owners", endpoint="list_owners")
 api.add_resource(ListImmobilesAPI, "/mobx/api/list_immobiles", endpoint="list_immobiles")
 api.add_resource(GetTenantById, "/mobx/api/get_tenant_by_id", endpoint="get_tenant_by_id")
 api.add_resource(GetOwnersById, "/mobx/api/get_owners_by_id", endpoint="get_owners_by_id")
+api.add_resource(CancelRentById, "/mobx/api/cancel_rent_by_id", endpoint="cancel_rent_by_id")
+api.add_resource(ShowRentByUserId, "/mobx/api/show_rent_by_user_id", endpoint="show_rent_by_user_id")
 
 
 if __name__ == "__main__":

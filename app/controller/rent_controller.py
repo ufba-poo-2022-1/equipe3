@@ -30,3 +30,39 @@ def add_rent(json_data):
     print('\n\n\n\n\n###########')
     print('{} - Script ending'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
     print('###########\n\n\n\n\n')
+
+def cancel_rent(json_data):
+    print("\n\n\n\n\n###########")
+    print("{} - Script starting".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+    print("###########\n\n\n\n\n")
+    print("Showing active users\n\n\n\n\n")
+
+    id = json_data["id"]
+
+    # TODO - Crud to cancel RENT
+    #print(db.session.query(Owner).get(id))
+
+
+    # db.session.commit()
+
+    print("\n\n\n\n\n###########")
+    print("{} - Script ending".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+    print("###########\n\n\n\n\n")
+
+def show_rent(json_data):
+    print("\n\n\n\n\n###########")
+    print("{} - Script starting".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+    print("###########\n\n\n\n\n")
+    print("Showing active users\n\n\n\n\n")
+
+    id = json_data["id"]
+
+    # TODO - Crud to show RENT by user id
+    #print(db.session.query(Owner).get(id))
+
+
+    # db.session.commit()
+
+    print("\n\n\n\n\n###########")
+    print("{} - Script ending".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+    print("###########\n\n\n\n\n")
