@@ -10,11 +10,20 @@ class House(Immobile):
     backyard = db.Column(db.Boolean, default=True)
     pool = db.Column(db.Boolean, default=False)
 
-
     __mapper_args__ = {"polymorphic_identity": "houses"}
 
     def __init__(self, description, value, area, is_available, backyard, pool):
         super().__init__(description, value, area, is_available)
         self.backyard = backyard
         self.pool = pool
-        
+
+    def transform_to_json(self):
+        return {
+            "id": self.id,
+            "description": self.description,
+            "value": self.value,
+            "area": self.area,
+            "is_available": self.is_available,
+            "backyard": self.backyard,
+            "pool": self.pool,
+        }
