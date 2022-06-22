@@ -66,13 +66,6 @@ def handle_exception(error):
 
 # APIs
 class AddTenantAPI(Resource):
-    # def __init__(self):
-    #     self.reqparse = reqparse.RequestParser()
-    #     super(AddTenantAPI, self).__init__()
-
-    # def post_task(self, j):
-    #     add_tenant(j)
-
     def post(self):
         json_data = request.get_json(force=True)
 
@@ -83,6 +76,7 @@ class AddTenantAPI(Resource):
             data=tenant,
             status_code=201,
         )
+
 
 class AddRentAPI(Resource):
     # def __init__(self):
@@ -167,32 +161,26 @@ class AddImmobileAPI(Resource):
         return {"add_immobile": marshal(result, api_fields)}, 201
 
 
+class AddApartmentAPI(Resource):
+    def post(self):
+        json_data = request.get_json(force=True)
+
+        apartment = add_apartment(json_data)
+
+        return make_success_response(
+            message="Apartamento criado com sucesso.",
+            data=apartment,
+            status_code=201,
+        )
+
+
 class ListTenantsAPI(Resource):
-    def __init__(self):
-        self.reqparse = reqparse.RequestParser()
-        super(ListTenantsAPI, self).__init__()
-
-    def get_task(self):
-        show_tenants()
-
     def get(self):
-        args = self.reqparse.parse_args()
+        tenants = show_tenants()
 
-        start_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        thread = Thread(target=self.get_task())
-        thread.start()
-
-        end_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        status = "OK"
-
-        result = {"start_date": start_date, "end_date": end_date, "status": status}
-        api_fields = {
-            "start_date": fields.String,
-            "end_date": fields.String,
-            "status": fields.String,
-        }
-        return {"list_tenants": marshal(result, api_fields)}, 201
+        return make_success_response(
+            message="Inquilinos listados com sucesso.", data=tenants
+        )
 
 
 class ListOwnersAPI(Resource):
@@ -224,32 +212,12 @@ class ListOwnersAPI(Resource):
 
 
 class ListImmobilesAPI(Resource):
-    def __init__(self):
-        self.reqparse = reqparse.RequestParser()
-        super(ListImmobilesAPI, self).__init__()
-
-    def get_task(self):
-        show_immobiles()
-        pass
-
     def get(self):
-        args = self.reqparse.parse_args()
+        immobiles = show_immobiles()
 
-        start_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        thread = Thread(target=self.get_task())
-        thread.start()
-
-        end_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        status = "OK"
-
-        result = {"start_date": start_date, "end_date": end_date, "status": status}
-        api_fields = {
-            "start_date": fields.String,
-            "end_date": fields.String,
-            "status": fields.String,
-        }
-        return {"list_immobiles": marshal(result, api_fields)}, 201
+        return make_success_response(
+            message="Imóveis listados com sucesso.", data=immobiles
+        )
 
 
 class GetTenantById(Resource):
@@ -311,6 +279,7 @@ class GetOwnersById(Resource):
         }
         return {"get_owners_by_id": marshal(result, api_fields)}, 201
 
+
 class CancelRentById(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
@@ -339,6 +308,7 @@ class CancelRentById(Resource):
             "status": fields.String,
         }
         return {"cancel_rent_by_id": marshal(result, api_fields)}, 201
+
 
 class ShowRentByUserId(Resource):
     def __init__(self):
@@ -375,13 +345,18 @@ api.add_resource(AddTenantAPI, "/mobx/api/add_tenant", endpoint="add_tenant")
 api.add_resource(AddRentAPI, "/mobx/api/add_rent", endpoint="add_rent")
 api.add_resource(AddOwnerAPI, "/mobx/api/add_owner", endpoint="add_owner")
 api.add_resource(AddImmobileAPI, "/mobx/api/add_immobile", endpoint="add_immobile")
+api.add_resource(AddApartmentAPI, "/mobx/api/add_apartment", endpoint="add_apartment")
 api.add_resource(ListTenantsAPI, "/mobx/api/list_tenants", endpoint="list_tenants")
 api.add_resource(ListOwnersAPI, "/mobx/api/list_owners", endpoint="list_owners")
 api.add_resource(ListImmobilesAPI, "/mobx/api/list_immobiles", endpoint="list_immobiles")
 api.add_resource(GetTenantById, "/mobx/api/get_tenant_by_id", endpoint="get_tenant_by_id")
 api.add_resource(GetOwnersById, "/mobx/api/get_owners_by_id", endpoint="get_owners_by_id")
-api.add_resource(CancelRentById, "/mobx/api/cancel_rent_by_id", endpoint="cancel_rent_by_id")
-api.add_resource(ShowRentByUserId, "/mobx/api/show_rent_by_user_id", endpoint="show_rent_by_user_id")
+api.add_resource(
+    CancelRentById, "/mobx/api/cancel_rent_by_id", endpoint="cancel_rent_by_id"
+)
+api.add_resource(
+    ShowRentByUserId, "/mobx/api/show_rent_by_user_id", endpoint="show_rent_by_user_id"
+)
 
 
 if __name__ == "__main__":
