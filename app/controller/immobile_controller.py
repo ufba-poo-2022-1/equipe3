@@ -55,6 +55,8 @@ def add_apartment(json_data):
 
 
 def add_house(json_data):
+   
+    # House fields
     description = json_data["description"]
     value = json_data["value"]
     area = json_data["area"]
@@ -62,10 +64,42 @@ def add_house(json_data):
     backyard = json_data["backyard"]
     pool = json_data["pool"]
 
+    # Address fields
+    street = json_data["street"]
+    number = json_data["number"]
+    district = json_data["district"]
+    city = json_data["city"]
+    cep = json_data["cep"]
+    complement = json_data["complement"]
+    user_id = json_data["user_id"]
+
     house = House(description, value, area, is_available, backyard, pool)
 
-    db.session.add(house)
-    db.session.commit()
+    address = Address(
+        street=street,
+        number=number,
+        district=district,
+        city=city,
+        cep=cep,
+        complement=complement,
+        user_id=user_id,
+        immobile_id=house.id,
+    )
+
+    try:
+        db.session.add(house)
+        db.session.add(address)
+        db.session.commit()
+
+    except Exception as error:
+        return make_exception_response(
+            description=error,
+            message="Não foi possível cadastrar um apartamento",
+        )
+
+    return house.transform_to_json()
+
+
 
 
 def show_immobiles():
