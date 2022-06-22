@@ -128,16 +128,14 @@ class AddOwnerAPI(Resource):
         return {"add_owner": marshal(result, api_fields)}, 201
 
 
-class AddImmobileAPI(Resource):
+class AddHouseAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        super(AddImmobileAPI, self).__init__()
+        super(AddHouseAPI, self).__init__()
 
     def post_task(self, j):
-        if j["flag"] == 1:
-            add_house(j)
-        else:
-            add_apartment(j)
+        add_house(j)
+
 
     def post(self):
         args = self.reqparse.parse_args()
@@ -158,7 +156,7 @@ class AddImmobileAPI(Resource):
             "end_date": fields.String,
             "status": fields.String,
         }
-        return {"add_immobile": marshal(result, api_fields)}, 201
+        return {"add_house": marshal(result, api_fields)}, 201
 
 
 class AddApartmentAPI(Resource):
@@ -344,7 +342,7 @@ class ShowRentByUserId(Resource):
 api.add_resource(AddTenantAPI, "/mobx/api/add_tenant", endpoint="add_tenant")
 api.add_resource(AddRentAPI, "/mobx/api/add_rent", endpoint="add_rent")
 api.add_resource(AddOwnerAPI, "/mobx/api/add_owner", endpoint="add_owner")
-api.add_resource(AddImmobileAPI, "/mobx/api/add_immobile", endpoint="add_immobile")
+api.add_resource(AddHouseAPI, "/mobx/api/add_house", endpoint="add_house")
 api.add_resource(AddApartmentAPI, "/mobx/api/add_apartment", endpoint="add_apartment")
 api.add_resource(ListTenantsAPI, "/mobx/api/list_tenants", endpoint="list_tenants")
 api.add_resource(ListOwnersAPI, "/mobx/api/list_owners", endpoint="list_owners")
