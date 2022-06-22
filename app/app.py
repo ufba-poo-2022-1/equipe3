@@ -182,31 +182,12 @@ class ListTenantsAPI(Resource):
 
 
 class ListOwnersAPI(Resource):
-    def __init__(self):
-        self.reqparse = reqparse.RequestParser()
-        super(ListOwnersAPI, self).__init__()
+       def get(self):
+        owners = show_tenants()
 
-    def get_task(self):
-        show_owners()
-
-    def get(self):
-        args = self.reqparse.parse_args()
-
-        start_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        thread = Thread(target=self.get_task())
-        thread.start()
-
-        end_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        status = "OK"
-
-        result = {"start_date": start_date, "end_date": end_date, "status": status}
-        api_fields = {
-            "start_date": fields.String,
-            "end_date": fields.String,
-            "status": fields.String,
-        }
-        return {"list_owners": marshal(result, api_fields)}, 201
+        return make_success_response(
+            message="Donos listados com sucesso.", data=owners
+        )
 
 
 class ListImmobilesAPI(Resource):

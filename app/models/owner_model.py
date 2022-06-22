@@ -21,3 +21,12 @@ class Owner(User):
             phone,
         )
         self.deed_id = deed_id
+
+    def transform_to_json(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "phone": self.phone,
+            "deed_id": self.deed_id if self.deed_id else None,
+        }    
