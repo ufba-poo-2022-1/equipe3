@@ -16,7 +16,7 @@ class Immobile(db.Model):
     _is_available = db.Column(db.Boolean, default=True)
     type = db.Column(db.String(128))
 
-    address = db.relationship("Address", backref="immobiles")
+    address = db.relationship("Address", backref="immobiles", uselist=False)
 
     __mapper_args__ = {"polymorphic_identity": "immobiles", "polymorphic_on": type}
 
