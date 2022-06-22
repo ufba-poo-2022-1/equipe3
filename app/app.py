@@ -183,7 +183,7 @@ class ListTenantsAPI(Resource):
 
 class ListOwnersAPI(Resource):
        def get(self):
-        owners = show_tenants()
+        owners = show_owners()
 
         return make_success_response(
             message="Donos listados com sucesso.", data=owners
