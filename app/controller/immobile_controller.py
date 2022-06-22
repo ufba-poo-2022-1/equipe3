@@ -1,79 +1,86 @@
-from datetime import datetime
 from extensions import db
 
 from models.apartment_model import Apartment
 from models.house_model import House
 from models.immobile_model import Immobile
-
+from models.address_model import Address
+from shared.responses import make_exception_response
 
 
 """ Controller responsible for adding and deleting immobiles endpoints """
+
+
 def add_apartment(json_data):
-    print('\n\n\n\n\n###########')
-    print('{} - Script starting'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
-    print('###########\n\n\n\n\n')
-    print('Adding the Apartment into database\n\n\n\n\n')
+    # Apartment fields
+    description = json_data["description"]
+    value = json_data["value"]
+    area = json_data["area"]
+    is_available = json_data["is_available"]
+    floor = json_data["floor"]
 
-    description = json_data['description']
-    value = json_data['value']
-    area = json_data['area']
-    is_available = json_data['is_available']
-    floor = json_data['floor']
+    # Address fields
+    street = json_data["street"]
+    number = json_data["number"]
+    district = json_data["district"]
+    city = json_data["city"]
+    cep = json_data["cep"]
+    complement = json_data["complement"]
+    user_id = json_data["user_id"]
 
-    apartment = Apartment(description,value,area,is_available,floor)
+    apartment = Apartment(description, value, area, is_available, floor)
 
-    db.session.add(apartment)
-    db.session.commit()
-    #j = jsonify(i=id, n=name,e=email,p=password,ph=phone,t=type)    
-    #res = j
-    #res = list(map(lambda x: json.loads(x), res))
-    #print(res)
-    print('\n\n\n\n\n###########')
-    print('{} - Script ending'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
-    print('###########\n\n\n\n\n')
+    address = Address(
+        street=street,
+        number=number,
+        district=district,
+        city=city,
+        cep=cep,
+        complement=complement,
+        user_id=user_id,
+        immobile_id=apartment.id,
+    )
+
+    try:
+        db.session.add(apartment)
+        db.session.add(address)
+        db.session.commit()
+
+    except Exception as error:
+        return make_exception_response(
+            description=error,
+            message="Não foi possível cadastrar um apartamento",
+        )
+
+    return apartment.transform_to_json()
+
 
 def add_house(json_data):
-    print('\n\n\n\n\n###########')
-    print('{} - Script starting'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
-    print('###########\n\n\n\n\n')
-    print('Adding the user into database\n\n\n\n\n')
-    description = json_data['description']
-    value = json_data['value']
-    area = json_data['area']
-    is_available = json_data['is_available']
-    backyard = json_data['backyard']
-    pool = json_data['pool']
+    description = json_data["description"]
+    value = json_data["value"]
+    area = json_data["area"]
+    is_available = json_data["is_available"]
+    backyard = json_data["backyard"]
+    pool = json_data["pool"]
 
-
-    house = House(description,value,area,is_available,backyard,pool)
+    house = House(description, value, area, is_available, backyard, pool)
 
     db.session.add(house)
     db.session.commit()
-    #j = jsonify(i=id, n=name,e=email,p=password,ph=phone,t=type)    
-    #res = j
-    #res = list(map(lambda x: json.loads(x), res))
-    #print(res)
-    print('\n\n\n\n\n###########')
-    print('{} - Script ending'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
-    print('###########\n\n\n\n\n')
 
 
 def show_immobiles():
-    print('\n\n\n\n\n###########')
-    print('{} - Script starting'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
-    print('###########\n\n\n\n\n')
-    print('Showing active Immobiles\n\n\n\n\n')
-
     # Fetch all customer records
-    records = db.session.query(Immobile.id).all()
+    try:
+        immobiles = Immobile.query.all()
 
-    # Loop over records
-    for record in records:
-        print(record)
+    except Exception as error:
+        return make_exception_response(
+            description=error.__str__(), message="Não foi possível listar os imóveis"
+        )
 
+    immobiles_in_json = []
 
-    #db.session.commit()
+    for immobile in immobiles:
+        immobiles_in_json.append(immobile.transform_to_json())
 
-    print('\n\n\n\n\n###########')
-    print('{} - Script ending'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
-    print('###########\n\n\n\n\n')
+    return immobiles_in_json
