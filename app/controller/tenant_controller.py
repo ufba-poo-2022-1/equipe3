@@ -40,23 +40,21 @@ def add_tenant(json_data):
 
 
 def show_tenants():
-    print("\n\n\n\n\n###########")
-    print("{} - Script starting".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-    print("###########\n\n\n\n\n")
-    print("Showing active users\n\n\n\n\n")
-
     # Fetch all customer records
-    records = db.session.query(Tenant.name).all()
+    try:
+        tenants = Tenant.query.all()
 
-    # Loop over records
-    for record in records:
-        print(record)
+    except Exception as error:
+        return make_exception_response(
+            description=error, message="Não foi possível listar os inquilinos."
+        )
 
-    # db.session.commit()
+    tenants_in_json = []
 
-    print("\n\n\n\n\n###########")
-    print("{} - Script ending".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-    print("###########\n\n\n\n\n")
+    for tenant in tenants:
+        tenants_in_json.append(tenant.transform_to_json())
+
+    return tenants_in_json
 
 
 def get_tenants(json_data):
