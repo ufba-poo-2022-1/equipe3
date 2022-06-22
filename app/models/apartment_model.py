@@ -21,6 +21,7 @@ class Apartment(Immobile):
             "value": self.value,
             "area": self.area,
             "is_available": self.is_available,
-            "backyard": self.backyard,
             "floor": self.floor,
+            "type": self.type,
+            "address": self.address.transform_to_json(),
         }
