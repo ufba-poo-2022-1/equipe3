@@ -21,8 +21,9 @@ class Rent:
     created_at = db.Column(db.DateTime(timezone=True), default=get_correct_datetime)
 
     owner_id = db.Column(db.String, db.ForeignKey("owners.id"))
-    tenant_id = db.Column(db.String, db.ForeignKey("tenants.id"))
     immobile_id = db.Column(db.String, db.ForeignKey("immobiles.id"))
+    tenant_id = db.Column(db.String, db.ForeignKey("tenants.id"))
+
 
     def __init__(
         self,
@@ -33,9 +34,10 @@ class Rent:
         fine_amount,
         created_at,
         owner_id,
-        tenant_id,
         immobile_id,
+        tenant_id,
     ):
+    
         self.id = str(uuid4())
         self.start_date = start_date
         self.end_date = end_date
@@ -44,5 +46,5 @@ class Rent:
         self.fine_amount = fine_amount
         self.created_at = created_at
         self.owner_id = owner_id
-        self.tenant_id = tenant_id
         self.immobile_id = immobile_id
+        self.tenant_id = tenant_id
