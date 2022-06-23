@@ -4,7 +4,7 @@ from models.apartment_model import Apartment
 from models.house_model import House
 from models.immobile_model import Immobile
 from models.address_model import Address
-from shared.responses import make_exception_response
+from shared.app_errors import AppError
 
 
 """ Controller responsible for adding and deleting immobiles endpoints """
@@ -26,7 +26,7 @@ def add_apartment(json_data):
     city = json_data["city"]
     cep = json_data["cep"]
     complement = json_data["complement"]
-    user_id = json_data["user_id"]
+    owner_id = json_data["owner_id"]
 
     apartment = Apartment(description, daily_rate, fine_amount, area, is_available, floor)
 
@@ -37,7 +37,7 @@ def add_apartment(json_data):
         city=city,
         cep=cep,
         complement=complement,
-        user_id=user_id,
+        owner_id=owner_id,
         immobile_id=apartment.id,
     )
 
@@ -47,16 +47,14 @@ def add_apartment(json_data):
         db.session.commit()
 
     except Exception as error:
-        return make_exception_response(
-            description=error,
-            message="Não foi possível cadastrar um apartamento",
+        raise AppError(
+            "Não foi possível cadastrar um apartamento", description=error.__str__()
         )
 
     return apartment.transform_to_json()
 
 
 def add_house(json_data):
-
     # House fields
     description = json_data["description"]
     value = json_data["value"]
@@ -72,7 +70,7 @@ def add_house(json_data):
     city = json_data["city"]
     cep = json_data["cep"]
     complement = json_data["complement"]
-    user_id = json_data["user_id"]
+    owner_id = json_data["owner_id"]
 
     house = House(description, value, area, is_available, backyard, pool)
 
@@ -83,7 +81,7 @@ def add_house(json_data):
         city=city,
         cep=cep,
         complement=complement,
-        user_id=user_id,
+        owner_id=owner_id,
         immobile_id=house.id,
     )
 
@@ -93,9 +91,8 @@ def add_house(json_data):
         db.session.commit()
 
     except Exception as error:
-        return make_exception_response(
-            description=error,
-            message="Não foi possível cadastrar um apartamento",
+        raise AppError(
+            "Não foi possível cadastrar uma casa.", description=error.__str__()
         )
 
     return house.transform_to_json()
@@ -107,9 +104,7 @@ def show_immobiles():
         immobiles = Immobile.list_all()
 
     except Exception as error:
-        return make_exception_response(
-            description=error.__str__(), message="Não foi possível listar os imóveis"
-        )
+        raise AppError("Não foi possível listar os imóveis", description=error.__str__())
 
     immobiles_in_json = []
 

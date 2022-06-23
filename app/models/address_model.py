@@ -14,11 +14,11 @@ class Address(db.Model):
     cep = db.Column(db.String(128))
     complement = db.Column(db.String(128))
 
-    user_id = db.Column(db.String, db.ForeignKey("users.id"))
+    owner_id = db.Column(db.String, db.ForeignKey("owners.id"))
     immobile_id = db.Column(db.String, db.ForeignKey("immobiles.id"))
 
     def __init__(
-        self, street, number, district, city, cep, user_id, immobile_id, complement=None
+        self, street, number, district, city, cep, owner_id, immobile_id, complement=None
     ):
         self.id = str(uuid4())
         self.street = street
@@ -27,7 +27,7 @@ class Address(db.Model):
         self.city = city
         self.cep = cep
         self.complement = complement
-        self.user_id = user_id
+        self.owner_id = owner_id
         self.immobile_id = immobile_id
 
     def transform_to_json(self):
@@ -39,6 +39,6 @@ class Address(db.Model):
             "city": self.city,
             "cep": self.cep,
             "complement": self.complement,
-            "user_id": self.user_id,
+            "owner_id": self.owner_id,
             "immobile_id": self.immobile_id,
         }
