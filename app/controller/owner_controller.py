@@ -58,20 +58,13 @@ def show_owners():
     return owners_in_json
 
 
-def get_owners(json_data):
-    print("\n\n\n\n\n###########")
-    print("{} - Script starting".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-    print("###########\n\n\n\n\n")
-    print("Showing active users\n\n\n\n\n")
+def get_owner_by_id(owner_id):
+    try:
+        owner = Owner.find_by_id(owner_id)
 
-    id = json_data["id"]
+    except Exception as error:
+        raise AppError(
+            "Não foi possível buscar o proprietário.", description=error.__str__()
+        )
 
-    # Fetch all customer records
-    print(db.session.query(Owner).get(id))
-
-
-    # db.session.commit()
-
-    print("\n\n\n\n\n###########")
-    print("{} - Script ending".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-    print("###########\n\n\n\n\n")
+    return owner.transform_to_json()
