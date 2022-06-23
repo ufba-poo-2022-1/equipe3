@@ -2,7 +2,6 @@ from datetime import datetime
 from extensions import db
 from models.owner_model import Owner
 from shared.app_errors import AppError
-from shared.responses import make_exception_response
 
 
 """ Controller responsible for adding and deleting user endpoints """
@@ -21,10 +20,10 @@ def add_owner(json_data):
 
     owner = Owner(name, email, password, phone, deed_id)
 
-    owner = Owner.query.filter_by(email=email).first()
+    owner = Owner.find_by_email(email)
 
     if owner is not None:
-        raise AppError("Já existe um dono com estes dados.")
+        raise AppError("Já existe um proprietário com estes dados.")
 
     owner = Owner(name, email, password, phone, deed_id)
 
@@ -33,8 +32,8 @@ def add_owner(json_data):
         db.session.commit()
 
     except Exception as error:
-        return make_exception_response(
-            description=error.__str__(), message="Não foi possível cadastrar o dono."
+        raise AppError(
+            "Não foi possível cadastrar um proprietário.", description=error.__str__()
         )
 
     return owner.transform_to_json()
@@ -43,11 +42,11 @@ def add_owner(json_data):
 def show_owners():
     # Fetch all customer records
     try:
-        owners = Owner.query.all()
+        owners = Owner.list_all()
 
     except Exception as error:
-        return make_exception_response(
-            description=error, message="Não foi possível listar os donos."
+        raise AppError(
+            "Não foi possível listar os proprietários.", description=error.__str__()
         )
 
     owners_in_json = []
