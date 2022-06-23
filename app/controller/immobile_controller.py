@@ -13,7 +13,8 @@ from shared.responses import make_exception_response
 def add_apartment(json_data):
     # Apartment fields
     description = json_data["description"]
-    value = json_data["value"]
+    daily_rate = json_data["daily_rate"]
+    fine_amount = json_data["fine_amount"]
     area = json_data["area"]
     is_available = json_data["is_available"]
     floor = json_data["floor"]
@@ -27,7 +28,7 @@ def add_apartment(json_data):
     complement = json_data["complement"]
     user_id = json_data["user_id"]
 
-    apartment = Apartment(description, value, area, is_available, floor)
+    apartment = Apartment(description, daily_rate, fine_amount, area, is_available, floor)
 
     address = Address(
         street=street,
@@ -55,7 +56,7 @@ def add_apartment(json_data):
 
 
 def add_house(json_data):
-   
+
     # House fields
     description = json_data["description"]
     value = json_data["value"]
@@ -98,8 +99,6 @@ def add_house(json_data):
         )
 
     return house.transform_to_json()
-
-
 
 
 def show_immobiles():
