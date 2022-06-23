@@ -109,17 +109,21 @@ def deliver_rent(json_data):
     return rent.transform_to_json()
 
 
-    id = json_data["id"]
+def show_tenant_rents(tenant_id):
+    try:
+        rents = Rent.find_by_tenant_id(tenant_id)
 
-    # TODO - Crud to cancel RENT
-    #print(db.session.query(Owner).get(id))
+    except Exception as error:
+        raise AppError(
+            "Não foi possível listar os aluguéis do inquilo.", description=error.__str__()
+        )
 
+    rents_in_json = []
 
-    # db.session.commit()
+    for rent in rents:
+        rents_in_json.append(rent.transform_to_json())
 
-    print("\n\n\n\n\n###########")
-    print("{} - Script ending".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-    print("###########\n\n\n\n\n")
+    return rents_in_json
 
 def show_rent(json_data):
     print("\n\n\n\n\n###########")
