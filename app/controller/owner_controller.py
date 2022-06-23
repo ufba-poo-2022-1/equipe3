@@ -4,10 +4,25 @@ from models.user_model import User
 from shared.app_errors import AppError
 
 
-""" Controller responsible for adding and deleting user endpoints """
+""" Controller responsible for adding and deleting owners endpoints """
 
 
 def add_owner(json_data):
+    """
+    Método responsável por receber o JSON de entrada e criar o dono
+
+    Parameters
+    ----------
+    json_data: _type_
+        JSON recebido pelo método POST via request com os dados para criação de um dono
+
+    Returns
+    -------
+     response: _type_
+        JSON com os atributos do dono criado
+
+    """
+
     name = json_data["name"]
     email = json_data["email"]
     password = json_data["password"]
@@ -38,6 +53,20 @@ def add_owner(json_data):
 
 
 def show_owners():
+    """
+    Método responsável por listar todos os donos existentes
+
+    Parameters
+    ----------
+
+
+    Returns
+    -------
+     response: _type_
+        JSON com os atributos dos donos criados
+
+    """
+
     # Fetch all customer records
     try:
         owners = Owner.list_all()
