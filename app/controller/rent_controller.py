@@ -70,11 +70,44 @@ def add_rent(json_data):
     return rent.transform_to_json()
 
 
-def cancel_rent(json_data):
-    print("\n\n\n\n\n###########")
-    print("{} - Script starting".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-    print("###########\n\n\n\n\n")
-    print("Showing active users\n\n\n\n\n")
+def deliver_rent(json_data):
+    rent_id = json_data["id"]
+
+    rent = Rent.find_by_id(rent_id)
+
+    if not rent:
+        raise AppError("Aluguel não encontrado")
+
+    immobile = Immobile.find_by_id(rent.immobile_id)
+
+    date_now = datetime.now()
+
+    mininum_daily = 1
+
+    daily = (date_now - rent.start_date).days
+
+    if daily <= 0:
+        daily = mininum_daily
+
+    delay = (date_now - rent.expected_return_date).days
+
+    total = 0
+
+    if delay > 0:
+        fine = delay * immobile.fine_amount
+        total = fine
+
+    total += daily * immobile.daily_rate
+
+    rent.end_date = date_now
+    rent.total = total
+
+    immobile.is_available = True
+
+    db.session.commit()
+
+    return rent.transform_to_json()
+
 
     id = json_data["id"]
 
