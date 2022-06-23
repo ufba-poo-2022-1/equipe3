@@ -125,20 +125,20 @@ def show_tenant_rents(tenant_id):
 
     return rents_in_json
 
-def show_rent(json_data):
-    print("\n\n\n\n\n###########")
-    print("{} - Script starting".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-    print("###########\n\n\n\n\n")
-    print("Showing active users\n\n\n\n\n")
 
-    id = json_data["id"]
+def show_owner_rents(owner_id):
+    try:
+        rents = Rent.find_by_owner_id(owner_id)
 
-    # TODO - Crud to show RENT by user id
-    #print(db.session.query(Owner).get(id))
+    except Exception as error:
+        raise AppError(
+            "Não foi possível listar os aluguéis do proprietário.",
+            description=error.__str__(),
+        )
 
+    rents_in_json = []
 
-    # db.session.commit()
+    for rent in rents:
+        rents_in_json.append(rent.transform_to_json())
 
-    print("\n\n\n\n\n###########")
-    print("{} - Script ending".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-    print("###########\n\n\n\n\n")
+    return rents_in_json
