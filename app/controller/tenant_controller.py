@@ -57,21 +57,13 @@ def show_tenants():
     return tenants_in_json
 
 
-def get_tenants(json_data):
-    print("\n\n\n\n\n###########")
-    print("{} - Script starting".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-    print("###########\n\n\n\n\n")
-    print("Showing active users\n\n\n\n\n")
+def get_tenant_by_id(tenant_id):
+    try:
+        tenant = Tenant.find_by_id(tenant_id)
 
-    id = json_data["id"]
+    except Exception as error:
+        raise AppError(
+            "Não foi possível buscar o inquilino.", description=error.__str__()
+        )
 
-    # Fetch all customer records
-    print(db.session.query(Tenant).get(id))
-
-    # Loop over records
-
-    # db.session.commit()
-
-    print("\n\n\n\n\n###########")
-    print("{} - Script ending".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-    print("###########\n\n\n\n\n")
+    return tenant.transform_to_json()
