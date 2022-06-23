@@ -11,6 +11,20 @@ from shared.responses import make_exception_response
 
 
 def add_apartment(json_data):
+    """
+    Método responsável por receber o JSON de entrada e criar o apartamento com seu endereço
+
+    Parameters
+    ----------
+    json_data: _type_
+        JSON recebido pelo método POST via request com os dados para criação de um apartamento e seu endereço
+
+    Returns
+    -------
+     response: _type_
+        JSON com os atributos do apartamento criado
+
+    """
     # Apartment fields
     description = json_data["description"]
     daily_rate = json_data["daily_rate"]
@@ -56,6 +70,20 @@ def add_apartment(json_data):
 
 
 def add_house(json_data):
+    """
+    Método responsável por receber o JSON de entrada e criar a casa com seu endereço
+
+    Parameters
+    ----------
+    json_data: _type_
+        JSON recebido pelo método POST via request com os dados para criação de uma casa e seu endereço
+
+    Returns
+    -------
+     response: _type_
+        JSON com os atributos da casa criada
+
+    """
 
     # House fields
     description = json_data["description"]
@@ -102,7 +130,20 @@ def add_house(json_data):
 
 
 def show_immobiles():
-    # Fetch all customer records
+    """
+    Método responsável por listar todos os imóveis existentes
+
+    Parameters
+    ----------
+    
+
+    Returns
+    -------
+     response: _type_
+        JSON com os atributos dos imóveis criados
+
+    """
+
     try:
         immobiles = Immobile.query.all()
 
