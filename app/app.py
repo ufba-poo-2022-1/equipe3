@@ -71,6 +71,21 @@ def handle_exception(error):
 
 # APIs
 class AddTenantAPI(Resource):
+    """
+    Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
+
+    Parameters
+    ----------
+    json_data: _type_
+        JSON recebido pelo método POST via request com os dados para criação de um Tenant
+
+    Returns
+    -------
+     response: response
+        resposta da requisição com o status da chamada no endpoint
+
+    """
+
     def post(self):
         json_data = request.get_json(force=True)
 
@@ -84,12 +99,21 @@ class AddTenantAPI(Resource):
 
 
 class AddRentAPI(Resource):
-    # def __init__(self):
-    #     self.reqparse = reqparse.RequestParser()
-    #     super(AddTenantAPI, self).__init__()
+    """
+    Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
 
-    # def post_task(self, j):
-    #     add_tenant(j)
+    Parameters
+    ----------
+    json_data: _type_
+        JSON recebido pelo método POST via request com os dados para criação de um Rent
+
+    Returns
+    -------
+     response: response
+        resposta da requisição com o status da chamada no endpoint
+
+    """
+
 
     def post(self):
         json_data = request.get_json(force=True)
@@ -104,6 +128,21 @@ class AddRentAPI(Resource):
 
 
 class AddOwnerAPI(Resource):
+    """
+    Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
+
+    Parameters
+    ----------
+    json_data: _type_
+        JSON recebido pelo método POST via request com os dados para criação de um Owner
+
+    Returns
+    -------
+     response: response
+        resposta da requisição com o status da chamada no endpoint
+
+    """
+
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         super(AddOwnerAPI, self).__init__()
@@ -134,6 +173,21 @@ class AddOwnerAPI(Resource):
 
 
 class AddHouseAPI(Resource):
+    """
+    Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
+
+    Parameters
+    ----------
+    json_data: _type_
+        JSON recebido pelo método POST via request com os dados para criação de uma House
+
+    Returns
+    -------
+     response: response
+        resposta da requisição com o status da chamada no endpoint
+
+    """
+
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         super(AddHouseAPI, self).__init__()
@@ -164,6 +218,21 @@ class AddHouseAPI(Resource):
 
 
 class AddApartmentAPI(Resource):
+    """
+    Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
+
+    Parameters
+    ----------
+    json_data: _type_
+        JSON recebido pelo método POST via request com os dados para criação de um Apartment
+
+    Returns
+    -------
+     response: response
+        resposta da requisição com o status da chamada no endpoint
+
+    """
+
     def post(self):
         json_data = request.get_json(force=True)
 
@@ -177,6 +246,20 @@ class AddApartmentAPI(Resource):
 
 
 class ListTenantsAPI(Resource):
+    """
+    Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
+
+    Parameters
+    ----------
+    GET: _type_
+        Método GET para chamada do endpoint que lista os Tenants criados
+
+    Returns
+    -------
+     response: response
+        resposta da requisição com o status da chamada no endpoint
+
+    """
     def get(self):
         tenants = show_tenants()
 
@@ -186,6 +269,21 @@ class ListTenantsAPI(Resource):
 
 
 class ListOwnersAPI(Resource):
+    """
+    Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
+
+    Parameters
+    ----------
+    GET: _type_
+        Método GET para chamada do endpoint que lista os Owners criados
+
+    Returns
+    -------
+     response: response
+        resposta da requisição com o status da chamada no endpoint
+
+    """
+
     def get(self):
         owners = show_owners()
 
@@ -195,6 +293,20 @@ class ListOwnersAPI(Resource):
 
 
 class ListImmobilesAPI(Resource):
+    """
+    Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
+
+    Parameters
+    ----------
+    GET: _type_
+        Método GET para chamada do endpoint que lista os Immobiles criados
+
+    Returns
+    -------
+     response: response
+        resposta da requisição com o status da chamada no endpoint
+
+    """
     def get(self):
         immobiles = show_immobiles()
 
@@ -204,6 +316,20 @@ class ListImmobilesAPI(Resource):
 
 
 class GetTenantById(Resource):
+    """
+    Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
+
+    Parameters
+    ----------
+    json_data: _type_
+        JSON recebido pelo método POST via request com os dados para buscar o Tenant
+
+    Returns
+    -------
+     response: response
+        resposta da requisição com o status da chamada no endpoint
+
+    """
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         super(GetTenantById, self).__init__()
@@ -234,6 +360,21 @@ class GetTenantById(Resource):
 
 
 class GetOwnersById(Resource):
+    """
+    Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
+
+    Parameters
+    ----------
+    json_data: _type_
+        JSON recebido pelo método POST via request com os dados para buscar o Owner
+
+    Returns
+    -------
+     response: response
+        resposta da requisição com o status da chamada no endpoint
+
+    """
+
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         super(GetOwnersById, self).__init__()
@@ -277,6 +418,7 @@ class DeliverRent(Resource):
 
 
 class ShowTenantRents(Resource):
+    
     def get(self, tenant_id):
         rents = show_tenant_rents(tenant_id)
 
