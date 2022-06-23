@@ -20,7 +20,7 @@ def add_tenant(json_data):
     if "rent_contract_id" in json_data:
         rent_contract_id = json_data["rent_contract_id"]
 
-    tenant = Tenant.query.filter_by(email=email).first()
+    tenant = Tenant.find_by_email(email)
 
     if tenant is not None:
         raise AppError("Já existe um inquilino com estes dados.")
@@ -32,8 +32,9 @@ def add_tenant(json_data):
         db.session.commit()
 
     except Exception as error:
-        return make_exception_response(
-            description=error.__str__(), message="Não foi possível cadastrar o inqulino."
+        raise AppError(
+            "Não foi possível cadastrar o inqulino.",
+            description=error.__str__(),
         )
 
     return tenant.transform_to_json()
@@ -42,11 +43,11 @@ def add_tenant(json_data):
 def show_tenants():
     # Fetch all customer records
     try:
-        tenants = Tenant.query.all()
+        tenants = Tenant.list_all()
 
     except Exception as error:
-        return make_exception_response(
-            description=error, message="Não foi possível listar os inquilinos."
+        raise AppError(
+            "Não foi possível listar os inquilinos.", description=error.__str__()
         )
 
     tenants_in_json = []
