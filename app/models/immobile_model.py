@@ -29,6 +29,6 @@ class Immobile(db.Model):
         self.area = area
         self.is_available = is_available
 
-    @is_available.setter
-    def is_available(self, is_available):
-        self._is_available = is_available
+    @classmethod
+    def find_by_id(cls, immobile_id):
+        return db.session.query(cls).filter_by(id=immobile_id).first()
