@@ -48,3 +48,18 @@ class Rent:
         self.owner_id = owner_id
         self.immobile_id = immobile_id
         self.tenant_id = tenant_id
+
+
+    def transform_to_json(self):
+        return {
+            "id": self.id,
+            "start_date": self.start_date.strftime("%Y/%m/%d %H:%M"),
+            "end_date": self.end_date.strftime("%Y/%m/%d %H:%M")
+            if self.end_date
+            else None,
+            "expected_return_date": self.expected_return_date.strftime("%Y/%m/%d %H:%M"),
+            "total": self.total,
+            "owner_id": self.owner_id,
+            "immobile_id": self.immobile_id,
+            "tenant_id": self.tenant_id,
+        }
