@@ -7,7 +7,12 @@ from extensions import db
 from controller.tenant_controller import add_tenant, show_tenants, get_tenants
 from controller.owner_controller import add_owner, show_owners, get_owners
 from controller.immobile_controller import add_house, add_apartment, show_immobiles
-from controller.rent_controller import add_rent, cancel_rent, show_rent
+from controller.rent_controller import (
+    add_rent,
+    deliver_rent,
+    show_owner_rents,
+    show_tenant_rents,
+)
 from shared.responses import make_exception_response, make_success_response
 from shared.app_errors import AppError
 
@@ -136,7 +141,6 @@ class AddHouseAPI(Resource):
     def post_task(self, j):
         add_house(j)
 
-
     def post(self):
         args = self.reqparse.parse_args()
 
@@ -182,11 +186,11 @@ class ListTenantsAPI(Resource):
 
 
 class ListOwnersAPI(Resource):
-       def get(self):
+    def get(self):
         owners = show_owners()
 
         return make_success_response(
-            message="Donos listados com sucesso.", data=owners
+            message="Proprietários listados com sucesso.", data=owners
         )
 
 
@@ -259,64 +263,31 @@ class GetOwnersById(Resource):
         return {"get_owners_by_id": marshal(result, api_fields)}, 201
 
 
-class CancelRentById(Resource):
-    def __init__(self):
-        self.reqparse = reqparse.RequestParser()
-        super(GetOwnersById, self).__init__()
-
-    def post_task(self, j):
-        cancel_rent(j)
-
+class DeliverRent(Resource):
     def post(self):
-        args = self.reqparse.parse_args()
-
         json_data = request.get_json(force=True)
 
-        start_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        rent = deliver_rent(json_data)
 
-        thread = Thread(target=self.post_task(json_data))
-        thread.start()
-
-        end_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        status = "OK"
-
-        result = {"start_date": start_date, "end_date": end_date, "status": status}
-        api_fields = {
-            "start_date": fields.String,
-            "end_date": fields.String,
-            "status": fields.String,
-        }
-        return {"cancel_rent_by_id": marshal(result, api_fields)}, 201
+        return make_success_response(
+            message="Aluguel devolvido com sucesso.",
+            data=rent,
+            status_code=200,
+        )
 
 
-class ShowRentByUserId(Resource):
-    def __init__(self):
-        self.reqparse = reqparse.RequestParser()
-        super(GetOwnersById, self).__init__()
+class ShowTenantRents(Resource):
+    def get(self, tenant_id):
+        rents = show_tenant_rents(tenant_id)
 
-    def post_task(self, j):
-        show_rent(j)
+        return make_success_response(message="Aluguéis listados com sucesso.", data=rents)
 
-    def post(self):
-        args = self.reqparse.parse_args()
 
-        json_data = request.get_json(force=True)
+class ShowOwnerRent(Resource):
+    def get(self, owner_id):
+        rents = show_owner_rents(owner_id)
 
-        start_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        thread = Thread(target=self.post_task(json_data))
-        thread.start()
-
-        end_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        status = "OK"
-
-        result = {"start_date": start_date, "end_date": end_date, "status": status}
-        api_fields = {
-            "start_date": fields.String,
-            "end_date": fields.String,
-            "status": fields.String,
-        }
-        return {"show_rent_by_user_id": marshal(result, api_fields)}, 201
+        return make_success_response(message="Aluguéis listados com sucesso.", data=rents)
 
 
 # Routes
@@ -330,11 +301,16 @@ api.add_resource(ListOwnersAPI, "/mobx/api/list_owners", endpoint="list_owners")
 api.add_resource(ListImmobilesAPI, "/mobx/api/list_immobiles", endpoint="list_immobiles")
 api.add_resource(GetTenantById, "/mobx/api/get_tenant_by_id", endpoint="get_tenant_by_id")
 api.add_resource(GetOwnersById, "/mobx/api/get_owners_by_id", endpoint="get_owners_by_id")
+api.add_resource(DeliverRent, "/mobx/api/deliver_rent", endpoint="deliver_rent")
 api.add_resource(
-    CancelRentById, "/mobx/api/cancel_rent_by_id", endpoint="cancel_rent_by_id"
+    ShowTenantRents,
+    "/mobx/api/show_tenant_rent/<string:tenant_id>",
+    endpoint="show_tenant_rent",
 )
 api.add_resource(
-    ShowRentByUserId, "/mobx/api/show_rent_by_user_id", endpoint="show_rent_by_user_id"
+    ShowOwnerRent,
+    "/mobx/api/show_owner_rent/<string:owner_id>",
+    endpoint="show_owner_rent",
 )
 
 
