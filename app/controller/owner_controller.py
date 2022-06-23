@@ -1,6 +1,6 @@
-from datetime import datetime
 from extensions import db
 from models.owner_model import Owner
+from models.user_model import User
 from shared.app_errors import AppError
 
 
@@ -18,9 +18,7 @@ def add_owner(json_data):
     if "deed_id" in json_data:
         deed_id = json_data["deed_id"]
 
-    owner = Owner(name, email, password, phone, deed_id)
-
-    owner = Owner.find_by_email(email)
+    owner = User.find_by_email(email)
 
     if owner is not None:
         raise AppError("Já existe um proprietário com estes dados.")
@@ -59,7 +57,7 @@ def show_owners():
 
 def get_owner_by_id(owner_id):
     try:
-        owner = Owner.find_by_id(owner_id)
+        owner = User.find_by_id(owner_id)
 
     except Exception as error:
         raise AppError(

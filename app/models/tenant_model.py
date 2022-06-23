@@ -1,5 +1,3 @@
-from uuid import uuid4
-
 from extensions import db
 from .user_model import User
 
@@ -15,6 +13,7 @@ class Tenant(User):
 
     __mapper_args__ = {"polymorphic_identity": "tenants"}
 
+    # TODO: Remover o rent_contract_id do construtor
     def __init__(self, name, email, password, phone, rent_contract_id):
         super().__init__(
             name,
@@ -27,14 +26,6 @@ class Tenant(User):
     @classmethod
     def list_all(cls):
         return db.session.query(cls).all()
-
-    @classmethod
-    def find_by_email(cls, tenant_email):
-        return db.session.query(cls).filter_by(email=tenant_email).first()
-
-    @classmethod
-    def find_by_id(cls, tenant_id):
-        return db.session.query(cls).filter_by(id=tenant_id).first()
 
     def transform_to_json(self):
         return {

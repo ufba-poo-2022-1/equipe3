@@ -23,3 +23,15 @@ class User(db.Model):
         self.email = email
         self.password = password
         self.phone = phone
+
+    @classmethod
+    def list_all(cls):
+        return db.session.query(cls).all()
+
+    @classmethod
+    def find_by_email(cls, user_email):
+        return db.session.query(cls).filter_by(email=user_email).first()
+
+    @classmethod
+    def find_by_id(cls, user_id):
+        return db.session.query(cls).filter_by(id=user_id).first()

@@ -13,6 +13,7 @@ class Owner(User):
 
     __mapper_args__ = {"polymorphic_identity": "owners"}
 
+    # TODO: remover o deed_id do constructor de owner
     def __init__(self, name, email, password, phone, deed_id):
         super().__init__(
             name,
@@ -25,14 +26,6 @@ class Owner(User):
     @classmethod
     def list_all(cls):
         return db.session.query(cls).all()
-
-    @classmethod
-    def find_by_email(cls, owner_email):
-        return db.session.query(cls).filter_by(email=owner_email).first()
-
-    @classmethod
-    def find_by_id(cls, owner_id):
-        return db.session.query(cls).filter_by(id=owner_id).first()
 
     def transform_to_json(self):
         return {
