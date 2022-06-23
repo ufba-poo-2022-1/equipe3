@@ -11,25 +11,23 @@ class Immobile(db.Model):
 
     id = db.Column(db.String, primary_key=True)
     description = db.Column(db.String(128))
-    value = db.Column(db.Float)
+    daily_rate = db.Column(db.Float)
+    fine_amount = db.Column(db.Float)
     area = db.Column(db.Float)
-    _is_available = db.Column(db.Boolean, default=True)
+    is_available = db.Column(db.Boolean, default=True)
     type = db.Column(db.String(128))
 
     address = db.relationship("Address", backref="immobiles", uselist=False)
 
     __mapper_args__ = {"polymorphic_identity": "immobiles", "polymorphic_on": type}
 
-    def __init__(self, description, value, area, is_available):
+    def __init__(self, description, daily_rate, fine_amount, area, is_available):
         self.id = str(uuid4())
         self.description = description
-        self.value = value
+        self.daily_rate = daily_rate
+        self.fine_amount = fine_amount
         self.area = area
-        self._is_available = is_available
-
-    @property
-    def is_available(self):
-        return self._is_available
+        self.is_available = is_available
 
     @is_available.setter
     def is_available(self, is_available):

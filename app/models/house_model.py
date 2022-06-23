@@ -12,8 +12,10 @@ class House(Immobile):
 
     __mapper_args__ = {"polymorphic_identity": "houses"}
 
-    def __init__(self, description, value, area, is_available, backyard, pool):
-        super().__init__(description, value, area, is_available)
+    def __init__(
+        self, description, daily_rate, fine_amount, area, is_available, backyard, pool
+    ):
+        super().__init__(description, daily_rate, fine_amount, area, is_available)
         self.backyard = backyard
         self.pool = pool
 
@@ -21,7 +23,8 @@ class House(Immobile):
         return {
             "id": self.id,
             "description": self.description,
-            "value": self.value,
+            "daily_rate": self.daily_rate,
+            "fine_amount": self.fine_amount,
             "area": self.area,
             "is_available": self.is_available,
             "backyard": self.backyard,

@@ -10,15 +10,16 @@ class Apartment(Immobile):
 
     __mapper_args__ = {"polymorphic_identity": "apartments"}
 
-    def __init__(self, description, value, area, is_available, floor):
-        super().__init__(description, value, area, is_available)
+    def __init__(self, description, daily_rate, fine_amount, area, is_available, floor):
+        super().__init__(description, daily_rate, fine_amount, area, is_available)
         self.floor = floor
 
     def transform_to_json(self):
         return {
             "id": self.id,
             "description": self.description,
-            "value": self.value,
+            "daily_rate": self.daily_rate,
+            "fine_amount": self.fine_amount,
             "area": self.area,
             "is_available": self.is_available,
             "floor": self.floor,
