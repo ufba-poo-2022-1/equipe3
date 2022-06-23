@@ -4,8 +4,8 @@ from datetime import datetime
 from threading import Thread
 
 from extensions import db
-from controller.tenant_controller import add_tenant, show_tenants, get_tenants
-from controller.owner_controller import add_owner, show_owners, get_owners
+from controller.tenant_controller import add_tenant, show_tenants, get_tenant_by_id
+from controller.owner_controller import add_owner, get_owner_by_id, show_owners
 from controller.immobile_controller import add_house, add_apartment, show_immobiles
 from controller.rent_controller import (
     add_rent,
@@ -114,7 +114,6 @@ class AddRentAPI(Resource):
 
     """
 
-
     def post(self):
         json_data = request.get_json(force=True)
 
@@ -143,33 +142,16 @@ class AddOwnerAPI(Resource):
 
     """
 
-    def __init__(self):
-        self.reqparse = reqparse.RequestParser()
-        super(AddOwnerAPI, self).__init__()
-
-    def post_task(self, j):
-        add_owner(j)
-
     def post(self):
-        args = self.reqparse.parse_args()
-
         json_data = request.get_json(force=True)
 
-        start_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        owner = add_owner(json_data)
 
-        thread = Thread(target=self.post_task(json_data))
-        thread.start()
-
-        end_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        status = "OK"
-
-        result = {"start_date": start_date, "end_date": end_date, "status": status}
-        api_fields = {
-            "start_date": fields.String,
-            "end_date": fields.String,
-            "status": fields.String,
-        }
-        return {"add_owner": marshal(result, api_fields)}, 201
+        return make_success_response(
+            message="Proprietário criado com sucesso.",
+            data=owner,
+            status_code=201,
+        )
 
 
 class AddHouseAPI(Resource):
@@ -188,33 +170,16 @@ class AddHouseAPI(Resource):
 
     """
 
-    def __init__(self):
-        self.reqparse = reqparse.RequestParser()
-        super(AddHouseAPI, self).__init__()
-
-    def post_task(self, j):
-        add_house(j)
-
     def post(self):
-        args = self.reqparse.parse_args()
-
         json_data = request.get_json(force=True)
 
-        start_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        house = add_house(json_data)
 
-        thread = Thread(target=self.post_task(json_data))
-        thread.start()
-
-        end_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        status = "OK"
-
-        result = {"start_date": start_date, "end_date": end_date, "status": status}
-        api_fields = {
-            "start_date": fields.String,
-            "end_date": fields.String,
-            "status": fields.String,
-        }
-        return {"add_house": marshal(result, api_fields)}, 201
+        return make_success_response(
+            message="Apartamento criado com sucesso.",
+            data=house,
+            status_code=201,
+        )
 
 
 class AddApartmentAPI(Resource):
@@ -260,6 +225,7 @@ class ListTenantsAPI(Resource):
         resposta da requisição com o status da chamada no endpoint
 
     """
+
     def get(self):
         tenants = show_tenants()
 
@@ -307,6 +273,7 @@ class ListImmobilesAPI(Resource):
         resposta da requisição com o status da chamada no endpoint
 
     """
+
     def get(self):
         immobiles = show_immobiles()
 
@@ -316,6 +283,7 @@ class ListImmobilesAPI(Resource):
 
 
 class GetTenantById(Resource):
+    # TODO: Atualizar documentação
     """
     Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
 
@@ -330,36 +298,17 @@ class GetTenantById(Resource):
         resposta da requisição com o status da chamada no endpoint
 
     """
-    def __init__(self):
-        self.reqparse = reqparse.RequestParser()
-        super(GetTenantById, self).__init__()
 
-    def post_task(self, j):
-        get_tenants(j)
+    def get(self, tenant_id):
+        tenant = get_tenant_by_id(tenant_id)
 
-    def post(self):
-        args = self.reqparse.parse_args()
-
-        json_data = request.get_json(force=True)
-
-        start_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        thread = Thread(target=self.post_task(json_data))
-        thread.start()
-
-        end_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        status = "OK"
-
-        result = {"start_date": start_date, "end_date": end_date, "status": status}
-        api_fields = {
-            "start_date": fields.String,
-            "end_date": fields.String,
-            "status": fields.String,
-        }
-        return {"get_tenant_by_id": marshal(result, api_fields)}, 201
+        return make_success_response(
+            message="Inquilino listado com sucesso.", data=tenant
+        )
 
 
-class GetOwnersById(Resource):
+class GetOwnerById(Resource):
+    # TODO: Atualizar a documentação
     """
     Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
 
@@ -375,33 +324,12 @@ class GetOwnersById(Resource):
 
     """
 
-    def __init__(self):
-        self.reqparse = reqparse.RequestParser()
-        super(GetOwnersById, self).__init__()
+    def get(self, owner_id):
+        owner = get_owner_by_id(owner_id)
 
-    def post_task(self, j):
-        get_owners(j)
-
-    def post(self):
-        args = self.reqparse.parse_args()
-
-        json_data = request.get_json(force=True)
-
-        start_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        thread = Thread(target=self.post_task(json_data))
-        thread.start()
-
-        end_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        status = "OK"
-
-        result = {"start_date": start_date, "end_date": end_date, "status": status}
-        api_fields = {
-            "start_date": fields.String,
-            "end_date": fields.String,
-            "status": fields.String,
-        }
-        return {"get_owners_by_id": marshal(result, api_fields)}, 201
+        return make_success_response(
+            message="Proprietário listado com sucesso.", data=owner
+        )
 
 
 class DeliverRent(Resource):
@@ -418,7 +346,6 @@ class DeliverRent(Resource):
 
 
 class ShowTenantRents(Resource):
-    
     def get(self, tenant_id):
         rents = show_tenant_rents(tenant_id)
 
@@ -441,8 +368,16 @@ api.add_resource(AddApartmentAPI, "/mobx/api/add_apartment", endpoint="add_apart
 api.add_resource(ListTenantsAPI, "/mobx/api/list_tenants", endpoint="list_tenants")
 api.add_resource(ListOwnersAPI, "/mobx/api/list_owners", endpoint="list_owners")
 api.add_resource(ListImmobilesAPI, "/mobx/api/list_immobiles", endpoint="list_immobiles")
-api.add_resource(GetTenantById, "/mobx/api/get_tenant_by_id", endpoint="get_tenant_by_id")
-api.add_resource(GetOwnersById, "/mobx/api/get_owners_by_id", endpoint="get_owners_by_id")
+api.add_resource(
+    GetTenantById,
+    "/mobx/api/get_tenant_by_id/<string:tenant_id>",
+    endpoint="get_tenant_by_id",
+)
+api.add_resource(
+    GetOwnerById,
+    "/mobx/api/get_owner_by_id/<string:owner_id>",
+    endpoint="get_owner_by_id",
+)
 api.add_resource(DeliverRent, "/mobx/api/deliver_rent", endpoint="deliver_rent")
 api.add_resource(
     ShowTenantRents,
