@@ -4,12 +4,7 @@ from datetime import datetime, timezone
 from extensions import db
 
 
-def get_correct_datetime():
-    current_time = datetime.now(timezone.utc)
-    return current_time.strftime("%Y-%m-%d %H:%M:%S%z")
-
-
-class Rent:
+class Rent(db.Model):
     __tablename__ = "rents"
 
     id = db.Column(db.String, primary_key=True)
