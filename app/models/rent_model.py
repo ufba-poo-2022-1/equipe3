@@ -43,6 +43,21 @@ class Rent(db.Model):
     def find_by_owner_id(cls, owner_id):
         return db.session.query(cls).filter_by(owner_id=owner_id).all()
 
+    @classmethod
+    def find_open_rent_by_imombile(cls, immobile_id):
+        return (
+            db.session.query(cls)
+            .filter_by(immobile_id=immobile_id, end_date=None)
+            .first()
+        )
+
+    @classmethod
+    def find_open_rent_by_tenant(cls, tenant_id):
+        return db.session.query(cls).filter_by(tenant_id=tenant_id, end_date=None).first()
+
+    @classmethod
+    def find_open_rent_by_owner(cls, owner_id):
+        return db.session.query(cls).filter_by(owner_id=owner_id, end_date=None).first()
 
     def transform_to_json(self):
         return {
