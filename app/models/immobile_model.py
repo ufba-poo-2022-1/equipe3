@@ -32,3 +32,7 @@ class Immobile(db.Model):
     @classmethod
     def find_by_id(cls, immobile_id):
         return db.session.query(cls).filter_by(id=immobile_id).first()
+
+    @classmethod
+    def list_all(cls):
+        return db.session.query(cls).all()

@@ -104,7 +104,7 @@ def add_house(json_data):
 def show_immobiles():
     # Fetch all customer records
     try:
-        immobiles = Immobile.query.all()
+        immobiles = Immobile.list_all()
 
     except Exception as error:
         return make_exception_response(
