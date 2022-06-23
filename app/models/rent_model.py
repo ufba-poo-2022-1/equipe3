@@ -31,6 +31,10 @@ class Rent(db.Model):
         self.immobile_id = immobile_id
         self.tenant_id = tenant_id
 
+    @classmethod
+    def find_by_id(cls, rent_id):
+        return db.session.query(cls).filter_by(id=rent_id).first()
+
 
     def transform_to_json(self):
         return {
