@@ -24,6 +24,18 @@ class Tenant(User):
         )
         self.rent_contract_id = rent_contract_id
 
+    @classmethod
+    def list_all(cls):
+        return db.session.query(cls).all()
+
+    @classmethod
+    def find_by_email(cls, tenant_email):
+        return db.session.query(cls).filter_by(email=tenant_email).first()
+
+    @classmethod
+    def find_by_id(cls, tenant_id):
+        return db.session.query(cls).filter_by(id=tenant_id).first()
+
     def transform_to_json(self):
         return {
             "id": self.id,
