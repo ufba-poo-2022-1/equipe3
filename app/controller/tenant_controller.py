@@ -4,17 +4,30 @@ from models.user_model import User
 from shared.app_errors import AppError
 
 
-""" Controller responsible for adding and deleting user endpoints """
+""" Controller responsible for adding and deleting tenants endpoints """
 
 
 def add_tenant(json_data):
+    """
+    Método responsável por receber o JSON de entrada e criar um inquilino
+
+    Parameters
+    ----------
+    json_data: _type_
+        JSON recebido pelo método POST via request com os dados para criação de um inquilino
+
+    Returns
+    -------
+     response: _type_
+        JSON com os atributos do inquilino criado
+
+    """
     name = json_data["name"]
     email = json_data["email"]
     password = json_data["password"]
     phone = json_data["phone"]
     rent_contract_id = None
 
-    # Where does it come from?
     if "rent_contract_id" in json_data:
         rent_contract_id = json_data["rent_contract_id"]
 
@@ -39,7 +52,21 @@ def add_tenant(json_data):
 
 
 def show_tenants():
-    # Fetch all customer records
+    """
+    Método responsável por listar todos os inquilinos existentes
+
+    Parameters
+    ----------
+
+
+    Returns
+    -------
+     response: _type_
+        JSON com os atributos dos inquilinos criados
+
+    """
+
+
     try:
         tenants = Tenant.list_all()
 
@@ -57,6 +84,19 @@ def show_tenants():
 
 
 def get_tenant_by_id(tenant_id):
+    """
+    Método responsável por recuperar o inquilinos existente por seu id
+
+    Parameters
+    ----------
+
+
+    Returns
+    -------
+     response: _type_
+        JSON com os atributos do inquilino recuperado
+
+    """
     try:
         tenant = User.find_by_id(tenant_id)
 
