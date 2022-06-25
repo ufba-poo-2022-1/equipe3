@@ -85,6 +85,19 @@ def show_owners():
 
 
 def get_owner_by_id(owner_id):
+    """
+    Método responsável por recuperar o donos existente por seu id
+
+    Parameters
+    ----------
+
+
+    Returns
+    -------
+     response: _type_
+        JSON com os atributos do dono recuperado
+
+    """
     try:
         owner = User.find_by_id(owner_id)
 

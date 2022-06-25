@@ -10,6 +10,20 @@ from shared.app_errors import AppError
 
 
 def add_rent(json_data):
+    """
+    Método responsável por receber o JSON de entrada e criar o aluguel
+
+    Parameters
+    ----------
+    json_data: _type_
+        JSON recebido pelo método POST via request com os dados para criação de um aluguel
+
+    Returns
+    -------
+     response: _type_
+        JSON com os atributos do aluguel criado
+
+    """
     owner_id = json_data["owner_id"]
     immobile_id = json_data["immobile_id"]
     tenant_id = json_data["tenant_id"]
@@ -71,6 +85,21 @@ def add_rent(json_data):
 
 
 def deliver_rent(json_data):
+    """
+    Método responsável por receber o JSON de entrada e devolver o aluguel
+
+    Parameters
+    ----------
+    json_data: _type_
+        JSON recebido pelo método POST via request com os dados para devolução de um aluguel
+
+    Returns
+    -------
+     response: _type_
+        JSON com os atributos do aluguel devolvido
+
+    """
+
     rent_id = json_data["id"]
 
     rent = Rent.find_by_id(rent_id)
@@ -110,6 +139,20 @@ def deliver_rent(json_data):
 
 
 def show_tenant_rents(tenant_id):
+    """
+    Método responsável por listar todos os aluguéis associados a um inquilino
+
+    Parameters
+    ----------
+    tenant_id: _type_
+        id to inquilino a ser recuperado
+
+    Returns
+    -------
+     response: _type_
+        JSON com os atributos do aluguéis associados àquele inquilino
+
+    """
     try:
         rents = Rent.find_by_tenant_id(tenant_id)
 
@@ -127,6 +170,20 @@ def show_tenant_rents(tenant_id):
 
 
 def show_owner_rents(owner_id):
+    """
+    Método responsável por listar todos os aluguéis associados a um dono
+
+    Parameters
+    ----------
+    tenant_id: _type_
+        id to dono a ser recuperado
+
+    Returns
+    -------
+     response: _type_
+        JSON com os atributos do aluguéis associados àquele dono
+
+    """
     try:
         rents = Rent.find_by_owner_id(owner_id)
 
