@@ -4,6 +4,21 @@ from extensions import db
 
 
 class Document(db.Model):
+    """
+    Classe que faz a herança da classe base Model e define a entidade Document.
+
+    Parameters
+    ----------
+    id: string
+    description:string
+    type:string
+
+    Returns
+    -------
+     response: __type__
+        Entidade document criada
+
+    """
     __tablename__ = "documents"
 
     id = db.Column(db.String, primary_key=True)

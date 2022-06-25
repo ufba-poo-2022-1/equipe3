@@ -5,6 +5,22 @@ from .user_model import Document
 
 
 class RentContract(Document):
+    """
+    Classe que faz a herança da classe Document e define a entidade rent_contract.
+
+    Parameters
+    ----------
+    id: string
+    description:string
+    rent_contract_number:Integer
+
+
+    Returns
+    -------
+     response: JSON
+        JSON com os atributos da entidade criada
+
+    """
     __tablename__ = "rent_contracts"
 
     id = db.Column(db.String, db.ForeignKey("documents.id"), primary_key=True)

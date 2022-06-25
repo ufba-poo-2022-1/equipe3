@@ -3,6 +3,26 @@ from .immobile_model import Immobile
 
 
 class House(Immobile):
+    """
+    Classe que faz a herança da Immobile e define a entidade House.
+
+    Parameters
+    ----------
+    id: string
+    backyard:boolean
+    pool:boolean
+    description:string
+    daily_rate:float
+    fine_amount:float
+    area:float
+    is_available:boolean
+
+    Returns
+    -------
+     response: JSON
+        JSON com os atributos da entidade criada
+
+    """
     __tablename__ = "houses"
 
     id = db.Column(db.String, db.ForeignKey("immobiles.id"), primary_key=True)

@@ -3,10 +3,26 @@ from uuid import uuid4
 from extensions import db
 
 
-""" Controller responsible for adding user endpoints """
-
-
 class Immobile(db.Model):
+    """
+    Classe que faz a herança da classe base Model e define a entidade Immobile.
+
+    Parameters
+    ----------
+    id: string
+    description:string
+    daily_rate:float
+    fine_amount:float
+    area:float
+    is_available:boolean
+    type:string
+
+    Returns
+    -------
+     response: __type__
+        Entidade immobile criada
+
+    """
     __tablename__ = "immobiles"
 
     id = db.Column(db.String, primary_key=True)
@@ -31,8 +47,36 @@ class Immobile(db.Model):
 
     @classmethod
     def find_by_id(cls, immobile_id):
+        """
+        Método responsável por buscar um imóvel em determinada classe por seu id
+
+        Parameters
+        ----------
+        immobile_id: string
+        cls:__type__
+
+        Returns
+        -------
+        response: __type__
+        Entidade filtrada por seu id
+
+        """
         return db.session.query(cls).filter_by(id=immobile_id).first()
 
     @classmethod
     def list_all(cls):
+        """
+        Método responsável por listados todos os imóveis de uma classe
+
+        Parameters
+        ----------
+        cls:__type__
+
+        Returns
+        -------
+        response: __type__
+        Todas as entidades cadastradas daquela classe
+
+        """
+        
         return db.session.query(cls).all()

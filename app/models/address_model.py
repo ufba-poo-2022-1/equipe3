@@ -4,6 +4,28 @@ from extensions import db
 
 
 class Address(db.Model):
+    """
+    Classe que faz a herança da classe base Model e define a entidade Address.
+
+    Parameters
+    ----------
+    id: string
+    street:string
+    number:integer
+    district:string
+    city:string
+    cep:string
+    complement:string
+    owner_id:string
+    complement:string
+
+    Returns
+    -------
+     response: JSON
+        JSON com os atributos da entidade criada
+
+    """
+
     __tablename__ = "addresses"
 
     id = db.Column(db.String, primary_key=True)

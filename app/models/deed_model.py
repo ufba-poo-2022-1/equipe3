@@ -5,6 +5,24 @@ from .user_model import Document
 
 
 class Deed(Document):
+    """
+    Classe que faz a herança da classe Document e define a entidade Deed.
+
+    Parameters
+    ----------
+    id: string
+    description:string
+    deed_number:Integer
+    date_of_acquaitance:datetime
+
+
+    Returns
+    -------
+     response: JSON
+        JSON com os atributos da entidade criada
+
+    """
+
     __tablename__ = "deeds"
 
     id = db.Column(db.String, db.ForeignKey("documents.id"), primary_key=True)
