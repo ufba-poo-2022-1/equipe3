@@ -77,7 +77,7 @@ Feel free to bring new features or fix problems, it will be a pleasure! 💜
 ---
 
 <div align='center'>
-  Made with 💚  by <a href='https://www.linkedin.com/in/ian-ramos/'> <strong>Ian Ramos</strong> </a> and <strong>Augusto Barreto</strong>🔥
+  Made with 💚  by <a href='https://www.linkedin.com/in/ian-ramos/'> <strong>Ian Ramos</strong> </a> and <a href='https://www.linkedin.com/in/augustosbarreto/'>  <strong>Augusto Barreto</strong> </a>🔥
   Get in touch!
 </div>
 
