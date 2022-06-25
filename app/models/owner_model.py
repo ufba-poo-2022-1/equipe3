@@ -3,6 +3,24 @@ from .user_model import User
 
 
 class Owner(User):
+    """
+    Classe que faz a herança da classe User e define a entidade Owner.
+
+    Parameters
+    ----------
+    id: string
+    name:string
+    email:string
+    phone:string
+    deed_id:string
+
+    Returns
+    -------
+     response: JSON
+        JSON com os dados da Entidade Owner criada
+
+    """
+
     __tablename__ = "owners"
 
     id = db.Column(db.String, db.ForeignKey("users.id"), primary_key=True)
@@ -25,6 +43,19 @@ class Owner(User):
 
     @classmethod
     def list_all(cls):
+        """
+        Método responsável por listar todos os owners
+
+        Parameters
+        ----------
+        cls:__type__
+
+        Returns
+        -------
+        response: __type__
+        Todas as entidades cadastradas daquela classe
+
+        """
         return db.session.query(cls).all()
 
     def transform_to_json(self):
