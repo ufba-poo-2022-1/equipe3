@@ -1,6 +1,7 @@
 from extensions import db
 from models.tenant_model import Tenant
 from models.user_model import User
+from models.rent_contract_model import RentContract
 from shared.app_errors import AppError
 
 
@@ -26,19 +27,21 @@ def add_tenant(json_data):
     email = json_data["email"]
     password = json_data["password"]
     phone = json_data["phone"]
-    rent_contract_id = None
 
-    if "rent_contract_id" in json_data:
-        rent_contract_id = json_data["rent_contract_id"]
+    description = json_data["description"]
+    rent_contract_number = json_data["rent_contract_number"]
+
+    rent_contract = RentContract(description, rent_contract_number)
 
     tenant = User.find_by_email(email)
 
     if tenant is not None:
         raise AppError("Já existe um inquilino com estes dados.")
 
-    tenant = Tenant(name, email, password, phone, rent_contract_id)
+    tenant = Tenant(name, email, password, phone, rent_contract.id)
 
     try:
+        db.session.add(rent_contract)
         db.session.add(tenant)
         db.session.commit()
 
@@ -65,7 +68,6 @@ def show_tenants():
         JSON com os atributos dos inquilinos criados
 
     """
-
 
     try:
         tenants = Tenant.list_all()

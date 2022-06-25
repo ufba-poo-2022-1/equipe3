@@ -24,14 +24,10 @@ class Tenant(User):
     __tablename__ = "tenants"
 
     id = db.Column(db.String, db.ForeignKey("users.id"), primary_key=True)
-
-    # TODO: criar relacionamento com a classe de de contrato de alguuel, que irá extender
-    # de documentos
-    rent_contract_id = db.Column(db.Integer)
+    rent_contract_id = db.Column(db.String, db.ForeignKey("rent_contracts.id"))
 
     __mapper_args__ = {"polymorphic_identity": "tenants"}
 
-    # TODO: Remover o rent_contract_id do construtor
     def __init__(self, name, email, password, phone, rent_contract_id):
         super().__init__(
             name,

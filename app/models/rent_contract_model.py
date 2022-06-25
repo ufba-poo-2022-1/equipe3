@@ -1,7 +1,5 @@
-from uuid import uuid4
-
 from extensions import db
-from .user_model import Document
+from .document_model import Document
 
 
 class RentContract(Document):
@@ -21,10 +19,11 @@ class RentContract(Document):
         JSON com os atributos da entidade criada
 
     """
+
     __tablename__ = "rent_contracts"
 
     id = db.Column(db.String, db.ForeignKey("documents.id"), primary_key=True)
-    rent_contract_number = db.Column(db.Integer(), unique=True)
+    rent_contract_number = db.Column(db.Integer, unique=True)
 
     __mapper_args__ = {"polymorphic_identity": "rent_contracts"}
 
