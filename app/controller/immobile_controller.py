@@ -69,6 +69,22 @@ def add_apartment(json_data):
 
 
 def add_house(json_data):
+    
+    """
+    Método responsável por receber o JSON de entrada e criar a casa com seu endereço
+
+    Parameters
+    ----------
+    json_data: _type_
+        JSON recebido pelo método POST via request com os dados para criação de uma casa e seu endereço
+
+    Returns
+    -------
+     response: _type_
+        JSON com os atributos da casa criada
+
+    """
+
     # House fields
     description = json_data["description"]
     value = json_data["value"]
