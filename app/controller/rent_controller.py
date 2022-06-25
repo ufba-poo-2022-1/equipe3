@@ -3,6 +3,7 @@ from datetime import datetime
 from extensions import db
 from models.rent_model import Rent
 from models.immobile_model import Immobile
+from models.user_model import User
 from shared.app_errors import AppError
 
 
@@ -58,12 +59,17 @@ def add_rent(json_data):
     if compare < minimum_rent_hour:
         raise AppError("Data de retorno inválida.")
 
+    owner = User.find_by_id(owner_id)
+    tenant = User.find_by_id(tenant_id)
+
     rent = Rent(
         start_date,
         expected_return_date,
         owner_id,
         immobile_id,
         tenant_id,
+        deed_id=owner.deed_id,
+        rent_contract_id=tenant.rent_contract_id,
     )
 
     immobile = Immobile.find_by_id(immobile_id)

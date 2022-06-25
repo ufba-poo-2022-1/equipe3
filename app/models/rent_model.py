@@ -36,6 +36,8 @@ class Rent(db.Model):
     owner_id = db.Column(db.String, db.ForeignKey("owners.id"))
     immobile_id = db.Column(db.String, db.ForeignKey("immobiles.id"))
     tenant_id = db.Column(db.String, db.ForeignKey("tenants.id"))
+    deed_id = db.Column(db.String, db.ForeignKey("deeds.id"))
+    rent_contract_id = db.Column(db.String, db.ForeignKey("rent_contracts.id"))
 
     def __init__(
         self,
@@ -44,6 +46,8 @@ class Rent(db.Model):
         owner_id,
         immobile_id,
         tenant_id,
+        deed_id,
+        rent_contract_id,
     ):
         self.id = str(uuid4())
         self.start_date = start_date
@@ -51,6 +55,8 @@ class Rent(db.Model):
         self.owner_id = owner_id
         self.immobile_id = immobile_id
         self.tenant_id = tenant_id
+        self.deed_id = deed_id
+        self.rent_contract_id = rent_contract_id
 
     @classmethod
     def find_by_id(cls, rent_id):
@@ -68,7 +74,7 @@ class Rent(db.Model):
         Entidade filtrada por seu id
 
         """
-        
+
         return db.session.query(cls).filter_by(id=rent_id).first()
 
     @classmethod
@@ -178,4 +184,6 @@ class Rent(db.Model):
             "owner_id": self.owner_id,
             "immobile_id": self.immobile_id,
             "tenant_id": self.tenant_id,
+            "deed_id": self.deed_id,
+            "rent_contract_id": self.rent_contract_id,
         }
