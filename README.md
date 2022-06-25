@@ -1,6 +1,3 @@
-<h1 align='center'>
-  <img src='.github/rentx_logo.png'>
-</h1>
 
 <div align="center">
   <a href="https://opensource.org/licenses/MIT"><img alt="License MIT" src="https://img.shields.io/badge/license-MIT-brightgreen"></a>
