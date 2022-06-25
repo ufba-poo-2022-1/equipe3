@@ -1,7 +1,5 @@
-from uuid import uuid4
-
 from extensions import db
-from .user_model import Document
+from .document_model import Document
 
 
 class Deed(Document):
@@ -26,7 +24,7 @@ class Deed(Document):
     __tablename__ = "deeds"
 
     id = db.Column(db.String, db.ForeignKey("documents.id"), primary_key=True)
-    deed_number = db.Column(db.Integer(), unique=True)
+    deed_number = db.Column(db.Integer, unique=True)
     date_of_acquaintance = db.Column(db.DateTime)
 
     __mapper_args__ = {"polymorphic_identity": "deeds"}
@@ -43,5 +41,5 @@ class Deed(Document):
             "id": self.id,
             "description": self.description,
             "deed_number": self.deed_number,
-            "date_of_acquaintance": self.date_of_acquaintance,
+            "date_of_acquaintance": self.date_of_acquaintance.strftime("%Y/%m/%d %H:%M"),
         }

@@ -1,6 +1,9 @@
+from datetime import datetime
+
 from extensions import db
 from models.owner_model import Owner
 from models.user_model import User
+from models.deed_model import Deed
 from shared.app_errors import AppError
 
 
@@ -28,19 +31,29 @@ def add_owner(json_data):
     password = json_data["password"]
     phone = json_data["phone"]
 
-    deed_id = None
+    description = json_data["description"]
+    deed_number = json_data["deed_number"]
+    date_of_acquaintance = json_data["date_of_acquaintance"]
 
-    if "deed_id" in json_data:
-        deed_id = json_data["deed_id"]
+    try:
+        date_of_acquaintance = datetime.strptime(
+            json_data["date_of_acquaintance"], "%Y/%m/%d %H:%M"
+        )
+
+    except ValueError as error:
+        raise AppError("A data está em um formato inválido.", description=error.__str__())
+
+    deed = Deed(description, deed_number, date_of_acquaintance)
 
     owner = User.find_by_email(email)
 
     if owner is not None:
         raise AppError("Já existe um proprietário com estes dados.")
 
-    owner = Owner(name, email, password, phone, deed_id)
+    owner = Owner(name, email, password, phone, deed_id=deed.id)
 
     try:
+        db.session.add(deed)
         db.session.add(owner)
         db.session.commit()
 

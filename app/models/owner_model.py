@@ -24,14 +24,10 @@ class Owner(User):
     __tablename__ = "owners"
 
     id = db.Column(db.String, db.ForeignKey("users.id"), primary_key=True)
-
-    # TODO: criar relacionamento com a classe de de escritura, que irá extender
-    # de documentos
-    deed_id = db.Column(db.Integer)
+    deed_id = db.Column(db.String, db.ForeignKey("deeds.id"))
 
     __mapper_args__ = {"polymorphic_identity": "owners"}
 
-    # TODO: remover o deed_id do constructor de owner
     def __init__(self, name, email, password, phone, deed_id):
         super().__init__(
             name,
