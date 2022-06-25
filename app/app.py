@@ -1,7 +1,5 @@
 from flask import Flask, jsonify, request
-from flask_restful import Api, Resource, reqparse, fields, marshal
-from datetime import datetime
-from threading import Thread
+from flask_restful import Api, Resource
 
 from extensions import db
 from controller.tenant_controller import add_tenant, show_tenants, get_tenant_by_id
@@ -45,9 +43,11 @@ def init_db():
     from models import (
         address_model,
         apartment_model,
+        deed_model,
         house_model,
         immobile_model,
         owner_model,
+        rent_contract_model,
         rent_model,
         tenant_model,
         user_model,
@@ -283,7 +283,6 @@ class ListImmobilesAPI(Resource):
 
 
 class GetTenantById(Resource):
-    # TODO: Atualizar documentação
     """
     Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
 
@@ -308,7 +307,6 @@ class GetTenantById(Resource):
 
 
 class GetOwnerById(Resource):
-    # TODO: Atualizar a documentação
     """
     Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
 
