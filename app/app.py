@@ -1,10 +1,18 @@
 from flask import Flask, jsonify, request
-from flask_restful import Api, Resource, reqparse, fields, marshal
-from controller.user_controller import add_user, show_users
-from controller.building_controller import add_building, show_immobiles
-from datetime import datetime
-from threading import Thread
+from flask_restful import Api, Resource
+
 from extensions import db
+from controller.tenant_controller import add_tenant, show_tenants, get_tenant_by_id
+from controller.owner_controller import add_owner, get_owner_by_id, show_owners
+from controller.immobile_controller import add_house, add_apartment, show_immobiles
+from controller.rent_controller import (
+    add_rent,
+    deliver_rent,
+    show_owner_rents,
+    show_tenant_rents,
+)
+from shared.responses import make_exception_response, make_success_response
+from shared.app_errors import AppError
 
 
 db = db
@@ -35,9 +43,11 @@ def init_db():
     from models import (
         address_model,
         apartment_model,
+        deed_model,
         house_model,
         immobile_model,
         owner_model,
+        rent_contract_model,
         rent_model,
         tenant_model,
         user_model,
@@ -46,129 +56,337 @@ def init_db():
     db.create_all()
 
 
+@app.errorhandler(AppError)
+def handle_exception(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+
+    return response
+
+
+@app.errorhandler(Exception)
+def handle_exception(error):
+    return make_exception_response(description=error.__str__())
+
+
 # APIs
-class AddUserAPI(Resource):
-    def __init__(self):
-        self.reqparse = reqparse.RequestParser()
-        super(AddUserAPI, self).__init__()
+class AddTenantAPI(Resource):
+    """
+    Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
 
-    def post_task(self, j):
-        add_user(j)
+    Parameters
+    ----------
+    json_data: _type_
+        JSON recebido pelo método POST via request com os dados para criação de um Tenant
 
-    def post(self):
-        args = self.reqparse.parse_args()
+    Returns
+    -------
+     response: response
+        resposta da requisição com o status da chamada no endpoint
 
-        json_data = request.get_json(force=True)
-
-        start_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        thread = Thread(target=self.post_task(json_data))
-        thread.start()
-
-        end_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        status = "OK"
-
-        result = {"start_date": start_date, "end_date": end_date, "status": status}
-        api_fields = {
-            "start_date": fields.String,
-            "end_date": fields.String,
-            "status": fields.String,
-        }
-        return {"add_user": marshal(result, api_fields)}, 201
-
-
-class AddImmobileAPI(Resource):
-    def __init__(self):
-        self.reqparse = reqparse.RequestParser()
-        super(AddImmobileAPI, self).__init__()
-
-    def post_task(self, j):
-        add_building(j)
+    """
 
     def post(self):
-        args = self.reqparse.parse_args()
-
         json_data = request.get_json(force=True)
 
-        start_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        tenant = add_tenant(json_data)
 
-        thread = Thread(target=self.post_task(json_data))
-        thread.start()
-
-        end_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        status = "OK"
-
-        result = {"start_date": start_date, "end_date": end_date, "status": status}
-        api_fields = {
-            "start_date": fields.String,
-            "end_date": fields.String,
-            "status": fields.String,
-        }
-        return {"add_immobile": marshal(result, api_fields)}, 201
+        return make_success_response(
+            message="Inquilino criado com sucesso.",
+            data=tenant,
+            status_code=201,
+        )
 
 
-class ListUsersAPI(Resource):
-    def __init__(self):
-        self.reqparse = reqparse.RequestParser()
-        super(ListUsersAPI, self).__init__()
+class AddRentAPI(Resource):
+    """
+    Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
 
-    def get_task(self):
-        show_users()
+    Parameters
+    ----------
+    json_data: _type_
+        JSON recebido pelo método POST via request com os dados para criação de um Rent
+
+    Returns
+    -------
+     response: response
+        resposta da requisição com o status da chamada no endpoint
+
+    """
+
+    def post(self):
+        json_data = request.get_json(force=True)
+
+        rent = add_rent(json_data)
+
+        return make_success_response(
+            message="Aluguel criado com sucesso.",
+            data=rent,
+            status_code=201,
+        )
+
+
+class AddOwnerAPI(Resource):
+    """
+    Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
+
+    Parameters
+    ----------
+    json_data: _type_
+        JSON recebido pelo método POST via request com os dados para criação de um Owner
+
+    Returns
+    -------
+     response: response
+        resposta da requisição com o status da chamada no endpoint
+
+    """
+
+    def post(self):
+        json_data = request.get_json(force=True)
+
+        owner = add_owner(json_data)
+
+        return make_success_response(
+            message="Proprietário criado com sucesso.",
+            data=owner,
+            status_code=201,
+        )
+
+
+class AddHouseAPI(Resource):
+    """
+    Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
+
+    Parameters
+    ----------
+    json_data: _type_
+        JSON recebido pelo método POST via request com os dados para criação de uma House
+
+    Returns
+    -------
+     response: response
+        resposta da requisição com o status da chamada no endpoint
+
+    """
+
+    def post(self):
+        json_data = request.get_json(force=True)
+
+        house = add_house(json_data)
+
+        return make_success_response(
+            message="Apartamento criado com sucesso.",
+            data=house,
+            status_code=201,
+        )
+
+
+class AddApartmentAPI(Resource):
+    """
+    Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
+
+    Parameters
+    ----------
+    json_data: _type_
+        JSON recebido pelo método POST via request com os dados para criação de um Apartment
+
+    Returns
+    -------
+     response: response
+        resposta da requisição com o status da chamada no endpoint
+
+    """
+
+    def post(self):
+        json_data = request.get_json(force=True)
+
+        apartment = add_apartment(json_data)
+
+        return make_success_response(
+            message="Apartamento criado com sucesso.",
+            data=apartment,
+            status_code=201,
+        )
+
+
+class ListTenantsAPI(Resource):
+    """
+    Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
+
+    Parameters
+    ----------
+    GET: _type_
+        Método GET para chamada do endpoint que lista os Tenants criados
+
+    Returns
+    -------
+     response: response
+        resposta da requisição com o status da chamada no endpoint
+
+    """
 
     def get(self):
-        args = self.reqparse.parse_args()
+        tenants = show_tenants()
 
-        start_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        return make_success_response(
+            message="Inquilinos listados com sucesso.", data=tenants
+        )
 
-        thread = Thread(target=self.get_task())
-        thread.start()
 
-        end_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        status = "OK"
+class ListOwnersAPI(Resource):
+    """
+    Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
 
-        result = {"start_date": start_date, "end_date": end_date, "status": status}
-        api_fields = {
-            "start_date": fields.String,
-            "end_date": fields.String,
-            "status": fields.String,
-        }
-        return {"list_users": marshal(result, api_fields)}, 201
+    Parameters
+    ----------
+    GET: _type_
+        Método GET para chamada do endpoint que lista os Owners criados
+
+    Returns
+    -------
+     response: response
+        resposta da requisição com o status da chamada no endpoint
+
+    """
+
+    def get(self):
+        owners = show_owners()
+
+        return make_success_response(
+            message="Proprietários listados com sucesso.", data=owners
+        )
 
 
 class ListImmobilesAPI(Resource):
-    def __init__(self):
-        self.reqparse = reqparse.RequestParser()
-        super(ListImmobilesAPI, self).__init__()
+    """
+    Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
 
-    def get_task(self):
-        show_immobiles()
-        pass
+    Parameters
+    ----------
+    GET: _type_
+        Método GET para chamada do endpoint que lista os Immobiles criados
+
+    Returns
+    -------
+     response: response
+        resposta da requisição com o status da chamada no endpoint
+
+    """
 
     def get(self):
-        args = self.reqparse.parse_args()
+        immobiles = show_immobiles()
 
-        start_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        return make_success_response(
+            message="Imóveis listados com sucesso.", data=immobiles
+        )
 
-        thread = Thread(target=self.get_task())
-        thread.start()
 
-        end_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        status = "OK"
+class GetTenantById(Resource):
+    """
+    Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
 
-        result = {"start_date": start_date, "end_date": end_date, "status": status}
-        api_fields = {
-            "start_date": fields.String,
-            "end_date": fields.String,
-            "status": fields.String,
-        }
-        return {"list_immobiles": marshal(result, api_fields)}, 201
+    Parameters
+    ----------
+    json_data: _type_
+        JSON recebido pelo método POST via request com os dados para buscar o Tenant
+
+    Returns
+    -------
+     response: response
+        resposta da requisição com o status da chamada no endpoint
+
+    """
+
+    def get(self, tenant_id):
+        tenant = get_tenant_by_id(tenant_id)
+
+        return make_success_response(
+            message="Inquilino listado com sucesso.", data=tenant
+        )
+
+
+class GetOwnerById(Resource):
+    """
+    Classe que faz a herança da classe base Resource e define o roteamento dos métodos HTTP para sua URL.
+
+    Parameters
+    ----------
+    json_data: _type_
+        JSON recebido pelo método POST via request com os dados para buscar o Owner
+
+    Returns
+    -------
+     response: response
+        resposta da requisição com o status da chamada no endpoint
+
+    """
+
+    def get(self, owner_id):
+        owner = get_owner_by_id(owner_id)
+
+        return make_success_response(
+            message="Proprietário listado com sucesso.", data=owner
+        )
+
+
+class DeliverRent(Resource):
+    def post(self):
+        json_data = request.get_json(force=True)
+
+        rent = deliver_rent(json_data)
+
+        return make_success_response(
+            message="Aluguel devolvido com sucesso.",
+            data=rent,
+            status_code=200,
+        )
+
+
+class ShowTenantRents(Resource):
+    def get(self, tenant_id):
+        rents = show_tenant_rents(tenant_id)
+
+        return make_success_response(message="Aluguéis listados com sucesso.", data=rents)
+
+
+class ShowOwnerRent(Resource):
+    def get(self, owner_id):
+        rents = show_owner_rents(owner_id)
+
+        return make_success_response(message="Aluguéis listados com sucesso.", data=rents)
 
 
 # Routes
-api.add_resource(AddUserAPI, "/mobx/api/add_user", endpoint="add_user")
-api.add_resource(AddImmobileAPI, "/mobx/api/add_immobile", endpoint="add_immobile")
-api.add_resource(ListUsersAPI, "/mobx/api/list_users", endpoint="list_users")
+api.add_resource(AddTenantAPI, "/mobx/api/add_tenant", endpoint="add_tenant")
+api.add_resource(AddRentAPI, "/mobx/api/add_rent", endpoint="add_rent")
+api.add_resource(AddOwnerAPI, "/mobx/api/add_owner", endpoint="add_owner")
+api.add_resource(AddHouseAPI, "/mobx/api/add_house", endpoint="add_house")
+api.add_resource(AddApartmentAPI, "/mobx/api/add_apartment", endpoint="add_apartment")
+api.add_resource(ListTenantsAPI, "/mobx/api/list_tenants", endpoint="list_tenants")
+api.add_resource(ListOwnersAPI, "/mobx/api/list_owners", endpoint="list_owners")
 api.add_resource(ListImmobilesAPI, "/mobx/api/list_immobiles", endpoint="list_immobiles")
+api.add_resource(
+    GetTenantById,
+    "/mobx/api/get_tenant_by_id/<string:tenant_id>",
+    endpoint="get_tenant_by_id",
+)
+api.add_resource(
+    GetOwnerById,
+    "/mobx/api/get_owner_by_id/<string:owner_id>",
+    endpoint="get_owner_by_id",
+)
+api.add_resource(DeliverRent, "/mobx/api/deliver_rent", endpoint="deliver_rent")
+api.add_resource(
+    ShowTenantRents,
+    "/mobx/api/show_tenant_rent/<string:tenant_id>",
+    endpoint="show_tenant_rent",
+)
+api.add_resource(
+    ShowOwnerRent,
+    "/mobx/api/show_owner_rent/<string:owner_id>",
+    endpoint="show_owner_rent",
+)
 
 
 if __name__ == "__main__":
