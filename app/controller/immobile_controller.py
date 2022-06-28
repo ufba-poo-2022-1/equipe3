@@ -69,7 +69,7 @@ def add_apartment(json_data):
 
 
 def add_house(json_data):
-    
+
     """
     Método responsável por receber o JSON de entrada e criar a casa com seu endereço
 
@@ -87,7 +87,8 @@ def add_house(json_data):
 
     # House fields
     description = json_data["description"]
-    value = json_data["value"]
+    daily_rate = json_data["daily_rate"]
+    fine_amount = json_data["fine_amount"]
     area = json_data["area"]
     is_available = json_data["is_available"]
     backyard = json_data["backyard"]
@@ -102,7 +103,9 @@ def add_house(json_data):
     complement = json_data["complement"]
     owner_id = json_data["owner_id"]
 
-    house = House(description, value, area, is_available, backyard, pool)
+    house = House(
+        description, daily_rate, fine_amount, area, is_available, backyard, pool
+    )
 
     address = Address(
         street=street,
